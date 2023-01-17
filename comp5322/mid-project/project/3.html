@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project - utils - Jerry Kwok</title>
+
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row xxl-h-screen">
+            <div class="col-xxl-1 align-self-center xxl-fixed">
+                <nav class="narbar navbar-expand xxl-nav">
+                    <ul>
+                        <li><a href='../index.html'>About Me</a></li>
+                        <li><a href='../project.html'>Projects</a></li>
+                        <li><a href='../blog.html'>Blog</a></li>
+                        <li><a href='../gallery.html'>Gallery</a></li>
+                    </ul>
+                </nav>
+
+                <div class="sm-nav">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="../index.html">About Me</a></li>
+                            <li><a class="dropdown-item" href="../project.html">Projects</a></li>
+                            <li><a class="dropdown-item" href="../blog.html">Blog</a></li>
+                            <li><a class="dropdown-item" href="../gallery.html">Gallery</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-11 offset-xxl-1">
+                <div class="page-content align-self-center">
+                    <div class="container-fluid">
+                        <div class="py-4">
+
+                            <div class="w-100">
+                                <a href="../project.html" class="btn-back">
+                                    < Back Projects</a>
+                            </div>
+
+                            <div class="py-4 d-flex project">
+
+
+                                <div class="p-4 flex-grow-1 project-content ">
+
+                                    <h2>utils</h2>
+                                    <hr>
+
+                                    <div class="page-title-box">
+                                        <span class="text">Updated: 13 Feb 2022</span>
+                                    </div>
+                                    <p>
+                                    <h4>Convertor</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Project</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a href="#fnc">FNC</a></td>
+                                                <td>Convert all folder/file names, including convert to another Chinese
+                                                    (Traditional/Simplified Chinese), delete specific words.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#acgn">acgn.convert</a></td>
+                                                <td>Convert the comic.acgn.cc view page to the .pdf like a book</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td><a href="#product_img_to_jpg">product_img_to_jpg</a></td>
+                                                <td>Convert product images to .JPG</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    </p>
+
+                                    <hr>
+
+                                    <div class="py-4">
+                                        <p>
+                                        <h2 id="fnc">File Name Convertor(FNC)</h2>
+                                        <hr>
+                                        <p>Convert all folder/file names, including convert to another Chinese
+                                            (Traditional/Simplified Chinese), delete specific words.</p>
+                                        <h3>Installation</h3>
+                                        <pre>pip install -r requirements.txt</pre>
+
+                                        <p>
+                                        <h3>Usage</h3>
+                                        <p>Convert Chinese filename</p>
+                                        <pre>python main.py convert [opencc-mode] [paths..]
+        # python main.py convert s2t /Users/jerry/Document/资料1/ /Users/jerry/Document/资料2/
+    </pre>
+
+                                        <p>Remove specific word</p>
+                                        <pre>python main.py remove [word] [paths..]
+        # python main.py remove "jerry" /Users/jerry/Document/jerry-data1/
+        # It will replace "jerry" to "" in all file/folder names of provided path
+    </pre>
+                                        </p>
+
+                                        <p>
+                                        <h3>OpenCC</h3>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Mode</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>hk2s</td>
+                                                    <td>繁體中文 (香港) -> 簡體中文</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>s2hk</td>
+                                                    <td>簡體中文 -> 繁體中文 (香港)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>st2</td>
+                                                    <td>簡體中文 -> 繁體中文</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>s2tw</td>
+                                                    <td>簡體中文 -> 繁體中文 (台灣)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>s2twp</td>
+                                                    <td>簡體中文 -> 繁體中文 (台灣, 包含慣用詞轉換)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>t2hk</td>
+                                                    <td>繁體中文 -> 繁體中文 (香港)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>t2s</td>
+                                                    <td>繁體中文 -> 簡體中文</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>t2tw</td>
+                                                    <td>繁體中文 -> 繁體中文 (台灣)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>tw2sp</td>
+                                                    <td>繁體中文 (台灣) -> 簡體中文</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>tw2sp</td>
+                                                    <td>繁體中文 (台灣) -> 簡體中文 (包含慣用詞轉換 )</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        </p>
+
+
+                                        </p>
+                                    </div>
+
+
+                                    <div class="py-4">
+                                        <h2 id="acgn">Acgn.cc Convertor</h2>
+                                        <hr>
+                                        <h3>Descriprtion</h3>
+                                        <p>This program will convert the comic.acgn.cc view page to the .pdf like a
+                                            book. The following output will show when the program finish</p>
+
+                                        <pre>=========================
+{book_name}  {pages_of_book} pages
+{book_name}  {pages_of_book} pages
+{book_name}  {pages_of_book} pages
+=========================</pre>
+
+                                        <p>
+                                        <h3>Installation</h3>
+                                        <pre>git clone https://github.com/jerrykhh/acgn.convert.git
+    cd acgn.convert
+    pip install -r requirements.txt</pre>
+                                        </p>
+
+                                        <p>
+                                        <h3>Usage</h3>
+                                        <pre>python main.py</pre>
+                                        <p>Enter following information:</p>
+                                        <pre>ACGH.convert starting...
+    Please enter EXIT to start the PDF generate
+    Please Enter the URL: [Please Enter the View page such as "https://comic.acgn.cc/view-66017.htm"]
+    [1]: https://comic.acgn.cc/view-66017.htm
+    Please Enter the URL: [If Enter "EXIT" it will start to generate the Book pdf]</pre>
+                                        <img src="..../images/project/3/URL.png" />
+                                        </p>
+
+                                    </div>
+
+                                    <div class="py-4">
+                                        <h2 id="product_img_to_jpg">product_img_to_jpg</h2>
+                                        <hr>
+                                        <h3>Image to JPG</h3>
+                                        <p>It will convert all image file to JPG, the following is more details</p>
+                                        <p>Directory structure:</p>
+                                        <pre>
+.
+├── product1_id
+|   ├── image1_name
+|   ├── image2_name
+└── product2_id
+    ├── image1_name
+    ├── image2_name
+    └── image3_name
+
+For example:
+.
+├── CLA-L01
+│   ├── 0013_06_500x.jpg.webp
+│   ├── 0014_05_500x.jpg.webp
+│   ├── 1_b33467e1-59a2-4b52-8ecf-fa8330d1a792_1000x.jpg.webp
+│   ├── 2_e130cb6f-d7d4-4d1d-8996-e6bd5a90a24f_1000x.jpg.webp
+│   └── 3_4d179687-2d70-4ec9-bcf6-441443a5f7e0_1000x.jpg.webp
+├── CLF-500
+│   ├── CLF500LGClaymore3FaceMiniLightGrey01_700x_1_960x.jpg.webp
+│   └── CLF500LGClaymore3FaceMiniLightGrey_1080x.jpg.webp
+└── ST-941
+    ├── 1_154e26ec-f773-42ac-9c04-a08be2a6a37c_700x.jpg.webp
+    ├── 2_cde01734-94c6-4376-9528-dd0e31b150cd_700x.jpg.webp
+    ├── 3_1b438112-0c7f-4d71-b4e7-6369a4d67157_700x.jpg.webp
+    └── h0223001_4953571079417_180830112403_01_515.jpg
+
+Result:
+├── CLA-L01
+│   ├── CLA-L01-asdd123.jpg
+│   ├── CLA-L01-f77agh3.jpg
+│   ├── CLA-L01-b4e7asd.jpg
+│   ├── CLA-L01-asjn123.jpg
+│   └── CLA-L01-asddf13.jpg
+├── CLF-500
+│   ├── CLF-500-asdzxd.jpg
+│   └── CLF-500-aytdjd.jpg
+└── ST-941
+    ├── ST-941-asdj9u4.jpg
+    ├── ST-941-dfgfsd3.jpg
+    ├── ST-941-assdgaf.jpg
+    └── ST-941-asdsdf4.jpg</pre>
+                                        <p>
+                                        <h3>Usage</h3>
+                                        <pre>python convert.py '/Users/jerrykwok/Downloads/products_img/'</pre>
+                                        </p>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="project-desc col-md-3">
+                                    <figure class="figure">
+                                        <img src="../images/project/py_utils.png" class="figure-img img-fluid rounded"
+                                            alt="...">
+                                        <figcaption class="figure-caption text-end">auto_grade</figcaption>
+                                    </figure>
+                                    <h4>Project Name</h4>
+                                    <p>utils</p>
+                                    <h4>About</h4>
+                                    <p>converter/ It combines many convertor-related projects, such as the filename, website to a book, etc. </p>
+
+                                    <div class="py-2">
+                                        <span class="repo-language-color" style="background-color: #3178c6"></span>
+                                        Python
+                                    </div>
+                                    <a href="https://github.com/jerrykhh/utils" target="_blank">
+                                        <button type="button" class="btn btn-outline-primary rep-btn my-3">View
+                                            repositorie</button>
+                                    </a>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+
+</html>

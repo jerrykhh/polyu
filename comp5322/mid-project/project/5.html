@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project - ustHack21 - Jerry Kwok</title>
+
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row xxl-h-screen">
+            <div class="col-xxl-1 align-self-center xxl-fixed">
+                <nav class="narbar navbar-expand xxl-nav">
+                    <ul>
+                        <li><a href='../index.html'>About Me</a></li>
+                        <li><a href='../project.html'>Projects</a></li>
+                        <li><a href='../blog.html'>Blog</a></li>
+                        <li><a href='../gallery.html'>Gallery</a></li>
+                    </ul>
+                </nav>
+
+                <div class="sm-nav">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="../index.html">About Me</a></li>
+                            <li><a class="dropdown-item" href="../project.html">Projects</a></li>
+                            <li><a class="dropdown-item" href="../blog.html">Blog</a></li>
+                            <li><a class="dropdown-item" href="../gallery.html">Gallery</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-11 offset-xxl-1">
+                <div class="page-content align-self-center">
+                    <div class="container-fluid">
+                        <div class="py-4">
+
+                            <div class="w-100">
+                                <a href="../project.html" class="btn-back">
+                                    < Back Projects</a>
+                            </div>
+
+                            <div class="py-4 d-flex project">
+
+
+                                <div class="p-4 flex-grow-1 project-content ">
+
+                                    <div class="py-4">
+                                        <h3>Description</h3>
+                                        <p>Nowadays, people tend to travel by themselves rather than travel agency as most of the information could be found online. A lot of videos would be shown if you search about the name of the location on YouTube. However, most of the tourism vlogs only talk about the attraction views but not the actual environment. Therefore, we developed a social media for users to exchange and share the details of their trip.</p>
+
+                                        <p>A picture is required for users to share regarding the trip, the picture would be uploaded based on their current location as a "marker" which the other users can see when they scroll to the corresponding place. An algorithm is used to combine the surroundings within 0.5km into the same spot to prevent overcrowding. "Markers" are shown on the map in their corresponding location. For the places with many "markers", only a few pictures with the highest likes would be shown on the map to avoid affecting user experience, and customers could click to look more if they are interested in the place. Also, it is difficult for us to gather sufficient pictures at the early stage due to the low exposure of the application. Hence, we have made use of the google map street view API for the spot without any markers, which users can still explore the place. Users can add different attraction points in their trip package for planning the travel trip, a suggested route would be generated based on the spot after they planned the package.</p>
+
+                                        <p>Besides, the application has a random location button for the user who wants to explore the world. The system would generate a random location that can let users know better about the different places. Furthermore, one of key features in social media application is to allow user to share their daily life with their friends, and user can share their experience with their friends privately via the chatroom.</p>
+
+                                        <p>For the technical side, we utilize DynamoDB, one of the NoSQL database providers to gather user’s data as pictures are unstructured data. NoSQL database is able to store a huge amount of data which is significant for a social media app. Also, serverless arthriticture is applied.</p>
+
+                                        <p>This project is use the React native to build up and build the serverless Architecture in AWS cloud. people tend to travel by themselves rather than travel agency as most of the information could be found online. Therefore, we developed a social media for users to exchange and share the details of their trip.</p>
+
+                                    </div>
+
+                                    <div class="py-4">
+                                        <p>If you interesting this project, you can view the demo video in Youtube</p>
+                                    
+                                        <div class="container py-2">
+                                            <div class="iframe-container">
+                                                <div class="embed-responsive embed-responsive-16by9">
+                                                    <iframe src="https://www.youtube.com/embed/wNURgAZhl84"
+                                                        class="embed-responsive-item" title="ustHack21"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+
+                                <div class="project-desc col-md-3">
+                                    <figure class="figure">
+                                        <img src="../images/project/hackust21.png" class="figure-img img-fluid rounded">
+                                        <figcaption class="figure-caption text-end">ustHack21</figcaption>
+                                    </figure>
+                                    <h4>Project Name</h4>
+                                    <p>ustHack21</p>
+                                    <h4>About</h4>
+                                    <p>This project is use the React native to build up and build the serverless Architecture in AWS cloud. people tend to travel by themselves rather than travel agency as most of the information could be found online. Therefore, we developed a social media for users to exchange and share the details of their trip.</p>
+                                    <div class="py-2 tag">
+                                        #ustHack21 #AWS-serverless 
+                                    </div>
+                                    <div class="py-2">
+                                        <span class="repo-language-color" style="background-color: #f1e05a"></span>
+                                        JavaScript
+                                    </div>
+                                    <a href="https://github.com/jerrykhh/ustHack21" target="_blank">
+                                        <button type="button" class="btn btn-outline-primary rep-btn my-3">View
+                                            repositorie</button>
+                                    </a>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+
+</html>

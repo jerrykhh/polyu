@@ -1,0 +1,438 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0b0c10;
+    color: white;
+    overflow-x: hidden;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans;
+}
+
+ul {
+    padding: 0;
+}
+
+.project img {
+    width: 100%;
+}
+
+.text {
+    color:rgb(200, 200, 200);
+    text-align: justify;
+}
+
+table {
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+table thead th, table td {
+    color: white;
+    padding: 15px !important;
+}
+
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+pre {
+    background-color: rgb(237, 237, 237);
+    padding: 30px 30px;
+    color: black;
+    font-size: 18px;
+    white-space: pre-wrap;
+}
+
+a:hover {
+    color: rebeccapurple;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.iframe-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%;
+}
+
+.embed-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+.btn-back {
+    background-color: #0b0c10;
+    border: 0;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.narbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.narbar a:hover {
+    border-bottom: 3px solid rebeccapurple;
+    color: rebeccapurple !important;
+    transition: all 0.5s;
+}
+
+.narbar a:visited {
+    color: white;
+}
+
+.narbar a {
+    padding: 10px;
+    
+}
+
+.narbar a.current {
+    
+    color: rebeccapurple !important;
+    cursor: pointer;
+    border-bottom: 3px solid rebeccapurple;
+}
+
+.page-title-box {
+    border-left: 4px solid rebeccapurple;
+    padding: 10px 15px;
+    text-transform: capitalize;
+}
+
+.page-content {
+    padding: 0px;
+}
+
+.about-desc p {
+    font-size:large;
+}
+
+.about-desc b {
+    margin-right: 10px;
+}
+
+.stack {
+    margin: 20px 0;
+}
+
+.tech-card {
+    background-color: rgb(33, 33, 33);
+    padding: 20px 20px 0px 20px;
+    margin: 10px;
+}
+
+.tech-card:hover{
+    background-color: rgb(45, 45, 45);
+}
+
+.tech-card p {
+    text-align: center;
+}
+
+.tech-image-container {
+    background-color: white;
+    padding: 0.5rem;
+}
+
+.content-card {
+    background-color: rgb(33, 33, 33);
+    padding: 20px ;
+}
+
+.project-card {
+    background-color: rgb(33, 33, 33);
+    border: rgb(75, 75, 75) solid 1px;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.project-card:hover {
+    background-color: rgb(60, 60, 60);
+}
+
+.project-content p {
+    text-align: justify;
+}
+
+.blog-list a:hover, .content-card a:hover {
+    color: white;
+}
+
+.blog-card {
+    margin: 20px;
+    margin-top: -50px;
+    padding: 20px;
+    min-height: 100px;
+    z-index: 1;
+    background-color: rgb(33, 33, 33);
+}
+
+.blog-card button {
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: rgb(33, 33, 33);
+    transition: all 0.5s;
+}
+
+.blog-card button:hover {
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: rgb(128, 128, 128);
+}
+
+.blog-card > button:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.blog-card button:hover span {
+    padding-right: 25px;
+}
+
+.blog-card > button > span {
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.blog-card > button > span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+    color: white;
+}
+
+.blog-wall {
+    width: 100%;
+}
+
+.blog-wall .container-sm > p {
+    width: 100%;
+    padding: 15px 0;
+    font-size: large;
+}
+
+
+
+
+
+.blog-wall .img-container {
+    height: 600px;
+    margin: 40px 0;
+}
+
+.blog-wall img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.blog-wall p {
+    text-align: justify;
+}
+
+div.project-list .row {
+    margin-bottom: 30px;
+}
+
+div.project-list .card {
+    margin: 30px;
+    border: 0px;
+    height: auto;
+    cursor: pointer;
+}
+
+.project > div {
+    margin: 10px;
+}
+
+.project .project-content {
+    border: 1px solid rgb(85, 85, 85);
+    border-radius: 5px;
+}
+
+.project .project-content h3 {
+    padding: 10px 0;
+}
+
+.project .project-desc {
+    padding: 20px;
+}
+
+.project .project-desc h4 {
+    margin-top: 20px
+}
+
+.project .project-desc p {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.project .project-desc .tag {
+    color: #405DE6;
+}
+
+.project .rep-btn {
+    width: 100%;
+}
+
+div.project-list div.card:first-child {
+    margin-left: 0;
+}
+
+div.project-list div.card:last-child {
+    margin-right: 0;
+}
+
+div.project-list div.card div.card-body {
+    padding: 25px 50px 25px 50px;
+    color: white;
+    background-color: rgb(20, 20, 20);
+}
+
+
+div.project-list div.card div.card-body .card-text {
+    text-align: justify;
+    color: gray;
+}
+
+.repo-language-color {
+    width: 15px;
+    height: 15px;
+    margin-right: 0.2rem;
+    border-radius: 18px;
+    display: inline-block;
+}
+
+
+@media (min-width: 1399.98px) {
+
+    .xxl-h-screen {
+        height: 100vh;
+    }
+
+    .xxl-fixed {
+        position: fixed;
+    }
+
+    .narbar li {
+        transform: rotate(-90deg);
+        min-width: max-content;
+        margin-bottom: 100px;
+        text-align: center;
+    }
+    
+    .narbar li > * {
+        transform: rotate(-90deg);
+        
+    }
+
+    .page-content {
+        padding: 4rem;
+    }
+    
+    .sm-nav {
+        visibility: hidden;
+    }
+    
+
+    div.project-list .card {
+        height: 100%;
+    }
+    
+    div.project-list div.card div.card-body{
+        padding: 50px 50px 0 50px;
+    }
+
+    .gallery{
+        align-content: center;
+    }
+
+}
+
+@media (max-width: 767.98px) {
+    
+    .project-desc {
+        order: 1;
+        width: 100%;
+    }
+
+
+
+    .project-content {
+        order: 2;
+    }
+    
+    .project {
+        flex-direction: column;
+        order: 2;
+    }
+
+    div.project-list .card {
+        margin-right: 0;
+    }
+
+    .blog-wall .img-container {
+        height: auto;
+    }
+
+}
+
+@media (max-width: 1199.98px) { 
+
+
+
+    .self-intro {
+        flex-direction: column;
+    }
+
+    div.self-intro > div.flex-grow-1 {
+        margin: 0px !important;
+    }
+    div.self-intro > div.flex-shrink-0{
+        align-self: center;
+        padding: 50px;
+    }
+
+ }
+
+ @media (max-width: 1399.98px) {
+
+    .xxl-nav {
+        display: none;
+        visibility: hidden;
+    }
+
+    .sm-nav {
+        padding: 20px;
+        text-align: right;
+    }
+
+    .sm-nav > .dropdown > button:hover {
+        background-color: white;
+        color: black;
+    }
+    
+
+    .sm-nav > .dropdown > button {
+        background-color: white;
+        color: black;
+    }
+
+}

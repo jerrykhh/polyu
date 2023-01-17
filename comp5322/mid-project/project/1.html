@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project - Instagram Follower/Following save to CSV file and Auto FOllow Based on CSV - Jerry Kwok</title>
+
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row xxl-h-screen">
+            <div class="col-xxl-1 align-self-center xxl-fixed">
+                <nav class="narbar navbar-expand xxl-nav">
+                    <ul>
+                        <li><a href='../index.html'>About Me</a></li>
+                        <li><a href='../project.html'>Projects</a></li>
+                        <li><a href='../blog.html'>Blog</a></li>
+                        <li><a href='../gallery.html'>Gallery</a></li>
+                    </ul>
+                </nav>
+
+                <div class="sm-nav">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="../index.html">About Me</a></li>
+                            <li><a class="dropdown-item" href="../project.html">Projects</a></li>
+                            <li><a class="dropdown-item" href="../blog.html">Blog</a></li>
+                            <li><a class="dropdown-item" href="../gallery.html">Gallery</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-11 offset-xxl-1">
+                <div class="page-content align-self-center">
+                    <div class="container-fluid">
+                        <div class="py-4">
+
+                            <div class="w-100">
+                                <a href="../project.html" class="btn-back">
+                                    < Back Projects</a>
+                            </div>
+
+                            <div class="py-4 d-flex project">
+
+
+                                <div class="p-4 flex-grow-1 project-content ">
+
+                                    <h2>Instagram Follower/Following save to CSV file and Auto Follow Based on CSV File
+                                    </h2>
+                                    <hr>
+                                    <p>
+                                    <div class="page-title-box">
+                                        <span class="text">Fetching user follower and user following is changed to
+Instagram Restful API from GraphQL</span>
+                                    </div>
+                                    </p>
+                                    <h3>Description</h3>
+                                    <p>It can save the following or follower data based on you is provided Instagram
+                                        account username (the account must be followed/public account). In addition, the
+                                        program is able to remove duplicate row or show duplicate only and save to new
+                                        data file. Moreover, the program can follow the user automatically based on the
+                                        data file, it will send the follow request to instagram server and for each
+                                        request can set the customized time interval. User can utilize above method to
+                                        follow the potential customer for your instagram business promotion/ data
+                                        analysis. * Now Updated version handled is supported the two factor
+                                        authentication and login challenge (email)</p>
+                                    <p>If you interesting this project, you can view my demo video in Youtube(Cantonese)
+                                        but it is old version:</p>
+
+
+                                    <div class="py-2 container">
+                                        <div class="iframe-container">
+<div class="embed-responsive embed-responsive-16by9">
+    <iframe src="https://www.youtube.com/embed/7SdcSPcPb8c"
+        class="embed-responsive-item"
+        title="Instagram數碼營銷 - 自動follow機器人(promotion)"
+        allowfullscreen></iframe>
+</div>
+                                        </div>
+                                    </div>
+
+                                    <p>
+                                    <h3>Features</h3>
+                                    <ol>
+                                        <li>Access the Instagram API via the Code</li>
+                                        <li>Get the User followed/ folower to CSV file</li>
+                                        <li>Get Instagram Post Loked users to CSV file</li>
+                                        <li>Combine the CSV file</li>
+                                        <li>FOllow the user automatically based on provided CSV file</li>
+                                        <li>Fetching the user details (Testing)</li>
+                                    </ol>
+                                    </p>
+
+                                    <p>
+                                    <h3>Installation</h3>
+                                    <pre>pip install -r requirements.txt</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Get User followed/follower to CSV file</h3>
+                                    <pre>
+-h, --help            show this help message and existing
+--username            Instagram Username
+--pwd                 Instagram Password
+--target              Target Instagram username
+--output              Output Directory (optional)
+--sleep               Sleep time for each request (optional, default 5 seconds) (optional)
+--user_agent          Please enter your common User Agent</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Get user follower to CSV</h3>
+                                    <pre>python ig_follower2csv.py --username "your_username" \
+--pwd "your_password" \
+--target "account1" "account2" \
+--output ./output \
+--sleep 5 \
+--user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36"</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Get user following to CSV</h3>
+                                    <pre>python ig_following2csv.py --username "your_username" \
+--pwd "your_password" \
+--target "account1" "account2" \
+--output ./output \
+--sleep 5 \
+--user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36"</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Get Post liked user to CSV file</h3>
+                                    <pre>-h, --help            show this help message and exit
+--username            Instagram Username
+--pwd                 Instagram Password
+--target              Target Instagram post short code
+--output              Output Directory (optional)
+--sleep               Sleep time for each request (optional, default 5 seconds) (optional)
+--user_agent          Please enter your common User Agent</pre>
+                                    * You can find the post short code in the post of user profile page
+                                    </p>
+
+                                    <p>
+                                    <h3>Combine the CSV file</h3>
+                                    <pre>-h, --help            show this help message and exit
+--action              There are merge, drop duplicate, remove followed (merge/drop_dup/rm_fol). Besides, you can use & to finish mulitpe action at same time like 'merge&drop_dup'
+--files               Please Enter the file paths (optional)
+--output              Saved file path</pre>
+                                    <pre>python ig_csv.py --action "merge&rm_fol"  \
+--files ./output/file1.csv ./output/file2.csv \
+--output ./output/</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Follow the user automatically based on provided csv file</h3>
+                                    <pre>-h, --help            show this help message and exit
+--username            Instagram Username
+--pwd                 Instagram Password
+--data                Please enter the path of your datafile
+--sleep               Please enter the sleep time for each follow request to avoid the account banned (sec per request), default is 8*60 sec per request (optional)
+--log                 Please enter the logging path for insert the logging (optional)</pre>
+                                    <pre>python ig_follow.py --username "your_username" \
+--pwd "your_password" \
+--user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36" \ 
+--data ./output/test-2.csv \
+--log ./output/test-log.txt</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Unfollow Users based on provided csv file</h3>
+                                    <pre>python ig_unfollow.py --username "your_username" \
+--pwd "your_password" \
+--user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36" \ 
+--data ./output/test-2.csv \
+--log ./output/test-log.txt</pre>
+                                    </p>
+
+                                    <p>
+                                    <h3>Fetching User Details (Testing)</h3>
+                                    <pre>-h, --help            show this help message and exit
+--username            Instagram Username
+--pwd PWD             Instagram Password
+--user_agent          Please enter your common User Agent
+--data DATA           data file (.csv) path [id col is required
+--thread THREAD       Number of Threading for fetching (default: 2)
+--output OUTPUT       Output Directory</pre>
+                                    <pre>python ig_biography.py --username "your_username" \
+--pwd "your_password" \
+--user_agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36" \ 
+--data ./output/test-2.csv \
+--thread 3</pre>
+
+                                    <h5>Limitation</h5>
+                                    <p>It cannot fetching user information many time when the user is not login, it will
+                                        redirect to login page. Therefore, the login is required. Also, the
+                                        ThreadingPool and AsyncIO method is commented due to the too quick to access
+                                        instagram api. If you want to test just uncomment it. In addition, i tested if
+                                        set thread 10 the instagram will be temp lock your account.</p>
+                                    </p>
+
+                                    <p>
+                                    <h3>Known Limitation</h3>
+                                    <ol>
+                                        <li>if the number of requests >= 200 will print "rate limited" for get the user
+data to csv file, due to Instagram limited -> Solve: Change the IP address
+(such as VPN)</li>
+                                        <li>If your password contain "!" and the Terminal is throw "zsh: parse error
+near `)'" please use single quota ('') For example: "abcdeGF!" -> 'abcdeGF!'
+                                        </li>
+                                    </ol>
+                                    </p>
+
+                                </div>
+
+                                <div class="project-desc col-md-3">
+                                    <figure class="figure">
+                                        <img src="../images/project/ig.jpg" class="figure-img img-fluid rounded"
+alt="...">
+                                        <figcaption class="figure-caption text-end">ig_follower</figcaption>
+                                    </figure>
+                                    <h4>Project Name</h4>
+                                    <p>ig_follower</p>
+                                    <h4>About</h4>
+                                    <p>About Instagram follower to CSV and auto-follow</p>
+                                    <div class="py-2 tag">
+                                        #Instagram #instagram-scraper <br>#instagram-automation
+                                    </div>
+
+                                    <div class="py-2">
+                                        <span class="repo-language-color" style="background-color: #3178c6"></span>
+                                        Python
+                                    </div>
+                                    <a href="https://github.com/jerrykhh/ig_follower" target="_blank">
+                                        <button type="button" class="btn btn-outline-primary rep-btn my-3">View repositorie</button>
+                                    </a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/bootstrap.bundle.js"></script>
+</body>
+
+</html>
