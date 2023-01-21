@@ -1,10 +1,14 @@
 .DS_Store
 **/.DS_Store
+**/.ipynb_checkpoints
+**/__pycache__
 
 # temp
+comp5424/
 comp5541/
 comp5511/
-comp5434/
-
 
 comp5322/hw2/Assignment2.docx
+comp5434/assignment/assignment_2/assig**[.docx,.pdf]
+comp5434/lecture
+comp5434/project/v1/
