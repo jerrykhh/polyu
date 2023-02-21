@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.13998800959232613" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.311" />
+        <entry key="app/src/main/res/drawable/btn_start_styles.xml" value="0.311" />
+        <entry key="app/src/main/res/drawable/et_chatroom_input.xml" value="0.589" />
+        <entry key="app/src/main/res/drawable/et_chatroom_owner_mes.xml" value="0.5" />
+        <entry key="app/src/main/res/drawable/et_chatroom_received_mes.xml" value="0.589" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.589" />
+        <entry key="app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.589" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.407" />
+        <entry key="app/src/main/res/layout/activity_chatroom_owner_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.40281951462013127" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25769927536231885" />
+        <entry key="app/src/main/res/layout/activity_message_chat.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_message_chat_owner_item.xml" value="0.36897430419921884" />
+        <entry key="app/src/main/res/layout/activity_message_chat_received_item.xml" value="0.44630126953125004" />
+        <entry key="app/src/main/res/layout/activity_search.xml" value="0.3472944572790345" />
+        <entry key="app/src/main/res/layout/activity_search_connection_header_item.xml" value="0.136986301369863" />
+        <entry key="app/src/main/res/layout/activity_search_connection_item.xml" value="0.31163787841796875" />
+        <entry key="app/src/main/res/layout/activity_search_connection_modal.xml" value="0.37273550724637683" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/connection_modal.xml" value="0.3229483282674772" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

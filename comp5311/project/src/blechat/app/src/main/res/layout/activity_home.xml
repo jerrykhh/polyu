@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".HomeActivity">
+
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
+        android:fontFamily="sans-serif-light"
+        android:text="bleChat"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:hint="Enter your Name"
+        android:inputType="textPersonName"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLogo" />
+
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Enter your Nickname to continue.\nYour Nickname must be at least 3 characters"
+        android:textAlignment="textStart"
+        android:textColor="#9C9C9C"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+    <android.widget.Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_start_styles"
+        android:hapticFeedbackEnabled="true"
+        android:text="Start"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDesc" />
+</androidx.constraintlayout.widget.ConstraintLayout>
