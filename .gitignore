@@ -7,10 +7,14 @@
 comp5517/
 comp5241/
 
-comp5311/assignment/
+
+comp5311/assignment/*[.pdf, .zip]
+!comp5311/assignment/*.md
 comp5311/project/*
-!comp5311/project/README.md
+!comp5311/project/*.md
 !comp5311/project/src/
+
+
 comp5322/hw2/Assignment2.docx
 comp5424/assignment/assignment1/*.docx
 comp5424/assignment/assignment1/*.pdf
