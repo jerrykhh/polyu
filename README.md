@@ -8,3 +8,6 @@ MSc Information Technology
 | [COMP5434](./comp5434/)| Big Data Computing |
 | [COMP5511](./comp5511/)| Artificial Intelligence Concepts |
 | [COMP5541](./comp5541/)| Machine Learning and Data Analytics |
+
+## Tools
+`pdf2OpenAIToken_noAPIkey.ipynb` may help you to build the GPT-bot for your course materials. It can convert provided pdf file and embedded the content to token.
