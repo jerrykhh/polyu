@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="LI, Qimai; Zhong, Yongfeng" />
+  <meta name="dcterms.date" content="November 16, 2021, modify on
+September 16, 2022" />
+  <title>Filter Basics and Edge Detection</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="ref/github-pandoc.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Filter Basics and Edge Detection</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#image-and-ndarray" id="toc-image-and-ndarray"><span
+class="toc-section-number">1</span> Image and Ndarray</a></li>
+<li><a href="#manipulate-ndarrays" id="toc-manipulate-ndarrays"><span
+class="toc-section-number">2</span> Manipulate Ndarrays</a>
+<ul>
+<li><a href="#array-attributes" id="toc-array-attributes"><span
+class="toc-section-number">2.1</span> Array attributes</a></li>
+<li><a href="#array-creation" id="toc-array-creation"><span
+class="toc-section-number">2.2</span> Array creation</a></li>
+<li><a href="#arithmetic-operation" id="toc-arithmetic-operation"><span
+class="toc-section-number">2.3</span> Arithmetic operation</a></li>
+<li><a href="#reshaping-indexing-slicing"
+id="toc-reshaping-indexing-slicing"><span
+class="toc-section-number">2.4</span> Reshaping / indexing /
+slicing</a></li>
+</ul></li>
+<li><a href="#filter-basics" id="toc-filter-basics"><span
+class="toc-section-number">3</span> Filter Basics</a>
+<ul>
+<li><a href="#convolutional-filters"
+id="toc-convolutional-filters"><span
+class="toc-section-number">3.1</span> Convolutional filters</a></li>
+<li><a href="#median-filter" id="toc-median-filter"><span
+class="toc-section-number">3.2</span> Median filter</a></li>
+</ul></li>
+<li><a href="#edge-detection-via-canny-edge-detector"
+id="toc-edge-detection-via-canny-edge-detector"><span
+class="toc-section-number">4</span> Edge Detection via Canny Edge
+Detector</a>
+<ul>
+<li><a href="#sobel-operator" id="toc-sobel-operator"><span
+class="toc-section-number">4.1</span> Sobel operator</a></li>
+<li><a href="#non-maximum-suppression"
+id="toc-non-maximum-suppression"><span
+class="toc-section-number">4.2</span> Non-maximum suppression</a></li>
+<li><a href="#hysteresis-thresholding-double-threshold"
+id="toc-hysteresis-thresholding-double-threshold"><span
+class="toc-section-number">4.3</span> Hysteresis thresholding (double
+threshold)</a></li>
+</ul></li>
+<li><a href="#hough-transform" id="toc-hough-transform"><span
+class="toc-section-number">5</span> Hough Transform</a>
+<ul>
+<li><a
+href="#the-hough-space-and-the-mapping-of-edge-points-onto-the-hough-space"
+id="toc-the-hough-space-and-the-mapping-of-edge-points-onto-the-hough-space"><span
+class="toc-section-number">5.1</span> The Hough Space and the Mapping of
+Edge Points onto the Hough Space</a></li>
+<li><a href="#an-alternate-way-to-represent-a-line"
+id="toc-an-alternate-way-to-represent-a-line"><span
+class="toc-section-number">5.2</span> An Alternate Way to Represent a
+Line</a></li>
+<li><a href="#the-algorithm" id="toc-the-algorithm"><span
+class="toc-section-number">5.3</span> The Algorithm</a></li>
+</ul></li>
+<li><a href="#assignment" id="toc-assignment"><span
+class="toc-section-number">6</span> Assignment</a>
+<ul>
+<li><a href="#part-i-filter-basics" id="toc-part-i-filter-basics"><span
+class="toc-section-number">6.1</span> Part I: Filter basics</a></li>
+<li><a href="#part-ii-canny-edge-detector"
+id="toc-part-ii-canny-edge-detector"><span
+class="toc-section-number">6.2</span> Part II: Canny edge
+detector</a></li>
+<li><a href="#bonus-hough-transform"
+id="toc-bonus-hough-transform"><span
+class="toc-section-number">6.3</span> Bonus: Hough transform</a></li>
+<li><a href="#submission-instruction"
+id="toc-submission-instruction"><span
+class="toc-section-number">6.4</span> Submission Instruction</a></li>
+</ul></li>
+<li><a href="#how-to-contact-us" id="toc-how-to-contact-us"><span
+class="toc-section-number">7</span> How to contact us</a></li>
+</ul>
+</nav>
+<p>Please read this <a href="SetupPython.html">setup</a> instruction
+before getting started.</p>
+<!-- ## Read & Write Image
+[Pillow](https://pillow.readthedocs.io/en/stable/handbook/tutorial.html) (PIL) provides basic functions for image read & write. We can read/display/write image by `open`, `show` and `save` like this:
+
+```python
+# load image
+from PIL import Image
+import numpy as np
+img = Image.open('road.jpeg')
+
+# display the image
+img.show()
+
+# save to file
+img.save('road2.jpeg')
+``` -->
+<h1 data-number="1" id="image-and-ndarray"><span
+class="header-section-number">1</span> Image and Ndarray</h1>
+<p>In digital computer, colour images are represented as 3-d arrays.
+Each element of the array is a 8-bit integer, with the range of [0,
+255]. The three dimensions are height, width, and channels respectively.
+The shape of the array is <span class="math display">\[(Height \times
+Width \times Channels).\]</span></p>
+<center>
+<img alt="output/output0.jpg" style="width:40%" src="https://brohrer.github.io/images/image_processing/three_d_array.png"/>
+</center>
+<p>NumPy is a standard library of ndarray arithmetic in python. Images
+can be represented as <code>numpy.ndarray</code> object.
+<code>PIL.image</code> is used for reading/writing image files. Here is
+an example for loading/processing/saving an image:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image <span class="co"># pillow package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">&#39;a.jpg&#39;</span>)               <span class="co"># read image file</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.asarray(img, dtype<span class="op">=</span>np.float64) <span class="co"># convert to np.ndarray</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># process the array here, e.g.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> arr<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> arr.astype(np.uint8) <span class="co"># make sure dtype is uint8</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> Image.fromarray(arr) <span class="co"># convert back to PIL.image object</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>img.save(<span class="st">&#39;b.jpg&#39;</span>)          <span class="co"># save to file</span></span></code></pre></div>
+<p>Three useful functions to help you read/write/show ndarrays are
+provided in <code>code/filter.py</code> and
+<code>code/edge.py</code>:</p>
+<ul>
+<li><code>read_img_as_array(file)</code></li>
+<li><code>save_array_as_img(arr, file)</code></li>
+<li><code>show_array_as_img(arr)</code></li>
+</ul>
+<h1 data-number="2" id="manipulate-ndarrays"><span
+class="header-section-number">2</span> Manipulate Ndarrays</h1>
+<p>NumPy provides nearly all operation for processing arrays,
+including</p>
+<ul>
+<li>arithmetic operation
+<ul>
+<li>addition, subtraction, multiplication, and division,</li>
+<li>sin/cos/tan/exp/power/log,</li>
+</ul></li>
+<li>indexing, slicing, stacking, concatenation, and shape
+manipulation</li>
+<li>matrix multiplication.</li>
+</ul>
+<p>This official <a
+href="https://numpy.org/devdocs/user/quickstart.html">NumPy tutorial</a>
+will give you a quick overview of NumPy. Make sure you are familiar with
+these operators. Here, I will show you several important parts of this
+tutorial that are closely related to our assignment.</p>
+<h2 data-number="2.1" id="array-attributes"><span
+class="header-section-number">2.1</span> Array attributes</h2>
+<p>Every ndarray has following three attributes – <code>dtype</code>,
+<code>shape</code> and <code>ndim</code>.</p>
+<ul>
+<li><code>dtype</code> indicates the data type of each element. e.g,
+int32 or float64.</li>
+<li><code>shape</code> indicates the shape of the ndarray., e.g, the
+number of rows and columns of matrix, the length of a vector, etc. A
+color image usually has shape <span class="math inline">\((H, W,
+C)\)</span>.</li>
+<li><code>ndim</code> the dimension of the array.
+<ul>
+<li><code>ndim==0</code>: scalar,</li>
+<li><code>ndim==1</code>: vector,</li>
+<li><code>ndim==2</code>: matrix.</li>
+<li><code>ndim&gt;=3</code>: multi-dimensional array, or say,
+tensor.</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create array from list</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">5</span>, <span class="dv">6</span>]])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>a.shape <span class="co"># (2,2)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>a.dtype <span class="co"># int64 -- 64-bit integer</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>a.ndim  <span class="co"># 2, means it is a matrix.</span></span></code></pre></div>
+<h2 data-number="2.2" id="array-creation"><span
+class="header-section-number">2.2</span> Array creation</h2>
+<p>Create an all one matrix of shape 2x3:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.ones([<span class="dv">2</span>,<span class="dv">3</span>])  <span class="co"># all one matrix of shape 2x3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[1., 1., 1.],</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        [1., 1., 1.]])</span></span></code></pre></div>
+<p>The default dtype is <code>float64</code> (double), you can specify
+other dtype:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.ones([<span class="dv">2</span>,<span class="dv">3</span>], dtype<span class="op">=</span>np.int32)  <span class="co"># all one matrix of 32-bit integers</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[1, 1, 1],</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        [1, 1, 1]], dtype=int32)</span></span></code></pre></div>
+<p>Create all zero matrix of shape 3x2:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.zeros([<span class="dv">3</span>,<span class="dv">2</span>]) <span class="co"># all zero matrix of shape 3x2</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[0., 0.],</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#        [0., 0.],</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#        [0., 0.]])</span></span></code></pre></div>
+<p>Create matrix of shape 2x2 with unknown value:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.empty([<span class="dv">2</span>,<span class="dv">2</span>]) <span class="co"># matrix of shape 2x2 with unknown value</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># e.g.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[2.31584178e+077, 2.31584178e+077],</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#        [2.96439388e-323, 6.93989086e-310]])</span></span></code></pre></div>
+<p>Create an array from 0 to 5, (6 elements in total):</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.arange(<span class="dv">6</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># array([0, 1, 2, 3, 4, 5])</span></span></code></pre></div>
+<h2 data-number="2.3" id="arithmetic-operation"><span
+class="header-section-number">2.3</span> Arithmetic operation</h2>
+<p>Add by a number — all elements will be added that number:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">5</span>, <span class="dv">6</span>]])</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> <span class="dv">1</span>   <span class="co"># addition</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># result:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[2, 3],</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#        [6, 7]])</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># subtraction, multiplication, and division are same.</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>a <span class="op">-</span> <span class="fl">1.5</span> <span class="co"># subtraction</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>a <span class="op">*</span> <span class="dv">5</span>   <span class="co"># multiplication</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>a <span class="op">/</span> <span class="dv">3</span>   <span class="co"># division</span></span></code></pre></div>
+<p>Add by a row/column vector – all rows/columns will be added with the
+vector. Subtraction, multiplication, and division are same.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># row vector</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> [<span class="dv">2</span>, <span class="dv">100</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[  3, 102],</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#        [  7, 106]])</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># column vector</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> [[  <span class="dv">2</span>],</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>     [<span class="dv">100</span>]]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[  3,   4],</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#        [105, 106]])</span></span></code></pre></div>
+<p>Add by an array with the same shape. The addition will be performed
+elementwise. Subtraction, multiplication, and division are same.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([[<span class="dv">10</span>, <span class="dv">30</span>],</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">20</span>, <span class="dv">40</span>]])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">+</span> b   <span class="co"># element-wise addition</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[11, 32],</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#        [25, 46]])</span></span></code></pre></div>
+<p>Take sin/square/sqrt/power/exponiential/logarithm of each
+element:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.sin(a)      <span class="co"># a_ij = sin(a_ij), sine</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>np.square(a)   <span class="co"># a_ij = (a_ij)^2, square</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>np.sqrt(a)     <span class="co"># a_ij = √(a_ij), square root</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>np.power(a, <span class="dv">5</span>) <span class="co"># a_ij = (a_ij)^5, arbitrary power</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>np.exp(a)      <span class="co"># a_ij = e^(a_ij), exponiential</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>np.log(a)      <span class="co"># a_ij = log(a_ij), logarithm</span></span></code></pre></div>
+<h2 data-number="2.4" id="reshaping-indexing-slicing"><span
+class="header-section-number">2.4</span> Reshaping / indexing /
+slicing</h2>
+<p>You can change an array’s shape via <code>reshape</code>:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.arange(<span class="dv">9</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># array([0, 1, 2, 3, 4, 5, 6, 7, 8])</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> a.reshape(<span class="dv">3</span>,<span class="dv">3</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[0, 1, 2],</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#        [3, 4, 5],</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#        [6, 7, 8]])</span></span></code></pre></div>
+<p>Access one element (indexing):</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,<span class="dv">1</span>]     <span class="co"># zeroth row, first column</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="dv">5</span> <span class="co"># assignment: a_00 = 5</span></span></code></pre></div>
+<p>Access a block (slicing):</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select first two rows and first two columns</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>:<span class="dv">2</span>, <span class="dv">0</span>:<span class="dv">2</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># array([[0, 1],</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#        [3, 4]])</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">0</span>, :] <span class="co"># zeroth row, colon means all.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>a[:, <span class="dv">2</span>] <span class="co"># second column</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># select a single channel</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> arr[:, :, <span class="dv">0</span>] <span class="co"># red channel</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> arr[:, :, <span class="dv">1</span>] <span class="co"># green channel</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> arr[:, :, <span class="dv">2</span>] <span class="co"># blue channel</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># horizontal derivative calculation</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>diff <span class="op">=</span> R[:, <span class="dv">1</span>:] <span class="op">-</span> R[:, :<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div>
+<h1 data-number="3" id="filter-basics"><span
+class="header-section-number">3</span> Filter Basics</h1>
+<h2 data-number="3.1" id="convolutional-filters"><span
+class="header-section-number">3.1</span> Convolutional filters</h2>
+<p><strong>Convolution</strong> via <a
+href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.convolve.html"><code>ndimage.convolve</code></a>.
+Gaussian smooth and sobel involves convolution. Here is an example:
+<span class="math display">\[\begin{bmatrix}
+-1 &amp; 1 \\
+-1 &amp; 1
+\end{bmatrix} * gray\]</span></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> ndimage</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [[<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>],     <span class="co"># kernel / filter</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>           [<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>diff <span class="op">=</span> ndimage.convolve(gray, weights)</span></code></pre></div>
+<center>
+<img alt="sharpening" style="width:70%" src="ref/conv.gif"/>
+</center>
+<h3 data-number="3.1.1" id="gaussian-filter"><span
+class="header-section-number">3.1.1</span> Gaussian filter</h3>
+<p>You may manually define your own gaussian kernel and apply it by
+<code>ndimage.convolve</code>. You can also use <a
+href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html"><code>scipy.ndimage.gaussian_filter</code></a>
+provided by SciPy directly. The parameter <code>sigma</code> controls
+how blur the resulted image is. The greater <code>sigma</code> is
+chosen, the blurrer resulted image is.</p>
+<p>A 3x3 Gaussian filter: <span
+class="math display">\[\text{Gaussian}=\frac{1}{16} \times
+\begin{bmatrix}
+1 &amp; 2 &amp; 1 \\
+2 &amp; 4 &amp; 2 \\
+1 &amp; 2 &amp; 1
+\end{bmatrix} =
+\begin{bmatrix}
+\frac{1}{16} &amp; \frac{1}{8} &amp; \frac{1}{16} \\
+\frac{1}{8} &amp; \frac{1}{4} &amp; \frac{1}{8} \\
+\frac{1}{16} &amp; \frac{1}{8} &amp; \frac{1}{16}
+\end{bmatrix}\]</span></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the gaussian kernel by hand</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gauss <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>],</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                  [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">2</span>],</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                  [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>]])</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>gauss <span class="op">=</span> gauss<span class="op">/</span>gauss.<span class="bu">sum</span>() <span class="co"># normalize the sum to be 1</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> ndimage.convolve(gray, gauss)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># or use &#39;ndimage.gaussian_filter&#39; function</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the bigger sigma is, the smoother output is.</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> ndimage</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> ndimage.gaussian_filter(gray, sigma<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># for color image, we need to specify sigma for each dimension.</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Especially, the sigma for channel should be zero.</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>rain <span class="op">=</span> read_img_as_array(<span class="st">&#39;rain.jpeg&#39;</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rain.shape) <span class="co"># (H,W,C) = (1706, 1279, 3)</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> ndimage.gaussian_filter(rain, sigma<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>])</span></code></pre></div>
+<h3 data-number="3.1.2" id="sharpening"><span
+class="header-section-number">3.1.2</span> Sharpening</h3>
+<p>We can use convolution to sharpen images. Sharpening images means
+enhancing the details of the image.</p>
+<p>Sharpening formular: <span class="math display">\[\begin{equation}
+\text{Detailed} = \text{Original} - \text{Blurred} \ \ \ \ (1)
+\end{equation}\]</span> <span class="math display">\[\begin{equation}
+\text{Sharpened} = \text{Original} + \alpha * \text{Detailed} \ \ \ \
+(2)
+\end{equation}\]</span></p>
+<p>In image sharpening, we have two parameters. One is the parameter
+<code>sigma</code> of Gaussian filter, the other one is <span
+class="math inline">\(\alpha\)</span>, which controls how much details
+you want to add back. The greater the <span
+class="math inline">\(\alpha\)</span> is, the sharper the output will
+be.</p>
+<p>The sharpened image obtained from eq. (2) may contain values that are
+larger than 255 or smaller than 0. They are not valid pixel value, and
+we need to truncate them into [0,255]:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the code for sharpening the image ...</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sharpened <span class="op">=</span> ...</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure all values in &#39;sharpened&#39; falls into [0,255]</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>sharpened[sharpened <span class="op">&lt;</span> <span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>sharpened[sharpened <span class="op">&gt;</span> <span class="dv">255</span>] <span class="op">=</span> <span class="dv">255</span></span></code></pre></div>
+<center>
+<img alt="sharpening" style="width:90%" src="ref/sharpening.jpg"/>
+</center>
+<h2 data-number="3.2" id="median-filter"><span
+class="header-section-number">3.2</span> Median filter</h2>
+<p>There are also non-convolutional filters. A classic one is median
+filter, which replace each pixel by the median of its neighbourhood.
+Median filter is very good at eliminating <strong>salt-and-pepper
+noise</strong> (a.k.a. impulse noise), which cannot be handled by
+Gaussian filters. There is only one parameter for median filter, that is
+the neighbourhood size. Larger neighbourhood size usually eliminates
+noise more completely, but also corrupted the image heavier.</p>
+For color images, we need to perform the median filter on each channel
+separately.
+<center>
+<p><img alt="median filter" style="width:80%" src="ref/medianfilter.png"/></p>
+<img alt="Noise_salt_and_pepper.png" style="width:30%" src="ref/Noise_salt_and_pepper.png"/>
+<img alt="denoised by 3x3 filter" style="width:30%" src="ref/denoised3.jpg"/>
+<img alt="denoised 9x9 filter" style="width:30%" src="ref/denoised9.jpg"/>
+<p>
+From left to right: (a) original. (b) denoised by 3x3 filter. (c)
+denoised by 9x9 filter.
+</p>
+</center>
+<h1 data-number="4" id="edge-detection-via-canny-edge-detector"><span
+class="header-section-number">4</span> Edge Detection via Canny Edge
+Detector</h1>
+<p>As you have learnt, Canny edge detector contains following steps:</p>
+<ol type="1">
+<li>Gaussian Smoothing</li>
+<li>Sobel Operator</li>
+<li>Non-maximum suppression</li>
+<li>Thresholding</li>
+</ol>
+<p><strong>RGB to Greyscale</strong>. For simplicity, we only discuss
+grayscale image here. First, we need to convert colour image to
+grayscale image. A common used rgb-to-gray formula is: <span
+class="math display">\[Y = 0.2989 \; R + 0.5870 \; G + 0.1140 \; B
+\]</span></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># you may use &#39;rgb2gray&#39; function in &#39;edge.py&#39; directly.</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> arr[:, :, <span class="dv">0</span>] <span class="co"># red channel</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> arr[:, :, <span class="dv">1</span>] <span class="co"># green channel</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> arr[:, :, <span class="dv">2</span>] <span class="co"># blue channel</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>gray <span class="op">=</span> <span class="fl">0.2989</span><span class="op">*</span>R <span class="op">+</span> <span class="fl">0.5870</span><span class="op">*</span>G <span class="op">+</span> <span class="fl">0.1140</span><span class="op">*</span>B</span></code></pre></div>
+<h2 data-number="4.1" id="sobel-operator"><span
+class="header-section-number">4.1</span> Sobel operator</h2>
+<p>Given an image <span class="math inline">\(A\)</span> of shape <span
+class="math inline">\((H, W)\)</span>, Sobel operator computes magnitude
+of gradient of <span class="math inline">\(A\)</span> as follow: <span
+class="math display">\[
+G_x = A*\begin{bmatrix}
++1 &amp; 0 &amp; -1 \\
++2 &amp; 0 &amp; -2 \\
++1 &amp; 0 &amp; -1
+\end{bmatrix}
+\qquad\qquad
+G_y = A*\begin{bmatrix}
++1 &amp; +2 &amp; +1 \\
+0 &amp;  0 &amp;  0 \\
+-1 &amp; -2 &amp; -1
+\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[G = \sqrt{G_x^2 + G_y^2}\]</span></p>
+<p>You need to finish the implement yourself (competing the
+<code>sobel</code> function in file <code>code/edge.py</code>). You may
+need <code>np.square</code> and <code>np.sqrt</code> to calculate
+squares and square roots.</p>
+<h2 data-number="4.2" id="non-maximum-suppression"><span
+class="header-section-number">4.2</span> Non-maximum suppression</h2>
+<p>The output of Sobel operator has poor localization. Edges trigger
+response in multiple adjacent pixels, which makes it difficult to decide
+the precise location of edges. Intuitively, edge occurs where gradient
+reaches a maxima, so we need to suppress all non-maximum values in <span
+class="math inline">\(G\)</span>, i.e., set them to 0.</p>
+<center>
+<img alt="poor localization" style="width:25%" src="ref/Circle.png"/>
+<img alt="Non-maximum suppression" style="width:30%" src="ref/NonmaxSupress.jpeg"/>
+<img alt="Non-maximum suppression" style="width:33%" src="ref/angle.jpg"/>
+</center>
+<p>We need to compare each gradient with its neighbours along
+perpendicular direction of edges, which is just the gradient direction.
+We first obtain the angle between gradient (<span
+style="color:black"><strong>black arrow</strong></span>) and x-axis.</p>
+<p><span class="math display">\[\theta =
+\arctan\left(\frac{Gy}{Gx}\right), \text{where } \theta \in [-180^\circ,
+180^\circ].\]</span></p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Gx <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Gy <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.arctan2(Gy, Gx) <span class="op">*</span> <span class="dv">180</span> <span class="op">/</span> np.pi</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 45.0</span></span></code></pre></div>
+<p>Then we decide which two neighbours <span
+class="math inline">\(N_1\)</span> and <span
+class="math inline">\(N_2\)</span> we need to compare, according to
+theta.</p>
+<ul>
+<li>If <span class="math inline">\(\theta \in [-22.5,+22.5] \cup [157.5,
+180] \cup [-157.5, -180]\)</span> then <span class="math display">\[ N_1
+= G[i][j+1], \quad N_2 = G[i][j-1].\]</span></li>
+<li>If <span class="math inline">\(\theta \in [22.5,67.5] \cup
+[-112.5,-157.5]\)</span> then <span class="math display">\[ N_1 =
+G[i+1][j+1], \quad
+N_2 = G[i-1][j-1].\]</span></li>
+<li>If <span class="math inline">\(\theta \in [67.5,112.5] \cup
+[-67.5,-112.5]\)</span> then <span class="math display">\[ N_1 =
+G[i+1][j], \quad
+N_2 = G[i-1][j].\]</span></li>
+<li>If <span class="math inline">\(\theta \in [112.5,157.5] \cup [-22.5,
+-67.5]\)</span> then <span class="math display">\[ N_1 = G[i-1][j+1],
+\quad
+N_2 = G[i+1][j-1].\]</span></li>
+</ul>
+<p>Finally, all non-maximum edge points are set to 0.</p>
+<p><span class="math display">\[ G[i, j] := \left\{\begin{array}{l}
+    0, &amp; \text{if}\; G[i, j] &lt; N_1; \\
+    0, &amp; \text{if}\; G[i, j] &lt; N_2; \\
+    G[i,j], &amp; \text{elsewise.}
+\end{array} \right. \]</span></p>
+<h2 data-number="4.3"
+id="hysteresis-thresholding-double-threshold"><span
+class="header-section-number">4.3</span> Hysteresis thresholding (double
+threshold)</h2>
+<p>After finishing non-maximum suppression, next step is to binarize the
+gradient magnitude. In standard Canny edge detector, binarization
+involves two-level thresholding and connectivity analysis. Since
+gradient magnitude ranged range from 0 to <span
+class="math inline">\(255\sqrt{2}\approx361\)</span>, you can choose a
+proper threshold in [0, 361]. For example:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>low_thr<span class="op">=</span> <span class="dv">180</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># binarize G</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>G[G<span class="op">&lt;=</span>low_thr] <span class="op">=</span> <span class="dv">0</span></span></code></pre></div>
+<p>If a pixel gradient has gradient greater than high threshold, it is a
+strong edge pixel. If the gradient is greater than low threshold, it is
+a week edge pixel. The final edgemap contains two kinds of pixels:</p>
+<ol type="1">
+<li>all strong edge pixels, and</li>
+<li>the week edge pixels that are connected to some strong edge
+pixels.</li>
+</ol>
+<center>
+<img alt="line equation" src="ref/connectivity.jpg" style="width:80%">
+</center>
+<center>
+<img alt="line equation" src="ref/thresholding.png" style="width:80%">
+</center>
+<h1 data-number="5" id="hough-transform"><span
+class="header-section-number">5</span> Hough Transform</h1>
+<p>After getting the edge image, now we want to recognize geometric
+shapes, such as straight lines, circles, ellipses, from the edge map. A
+classical method to do so is Hough Transform. In this section, we
+demonstrate how to recognize straight lines by Hough transform.</p>
+<h2 data-number="5.1"
+id="the-hough-space-and-the-mapping-of-edge-points-onto-the-hough-space"><span
+class="header-section-number">5.1</span> The Hough Space and the Mapping
+of Edge Points onto the Hough Space</h2>
+A line on an edge image is represented in the form of <span
+class="math inline">\(y = ax + b\)</span> (Hough, 1962). One line on the
+edge image produces a point on the Hough Space since a line is
+characterized by its slope <span class="math inline">\(a\)</span> and
+intercept <span class="math inline">\(b\)</span>.
+<center>
+<img alt="hough transform ab space" src="ref/hough_ab.jpg" style="width:90%">
+</center>
+<h2 data-number="5.2" id="an-alternate-way-to-represent-a-line"><span
+class="header-section-number">5.2</span> An Alternate Way to Represent a
+Line</h2>
+<p>There is one flaw with representing lines in the form of <span
+class="math inline">\(y = ax + b\)</span> and the Hough Space with the
+slope and intercept. In this form, the algorithm won’t be able to detect
+vertical lines because the slope <span class="math inline">\(a\)</span>
+is undefined/infinity for vertical lines (Leavers, 1992).</p>
+To avoid this issue, a straight line is instead represented by a line
+called the normal line: <span class="math display">\[\rho =
+cos(\theta)\;x + sin(\theta)\;y,\]</span> where <span
+class="math inline">\(\rho\)</span> is the length of the normal line and
+<span class="math inline">\(\theta\)</span> is the angle between the
+normal line and the x axis. The range of <span
+class="math inline">\(\theta\)</span> is <span class="math inline">\([0,
+\pi]\)</span>; and range of <span class="math inline">\(\rho\)</span> is
+<span class="math inline">\([-D, +D]\)</span>, where <span
+class="math inline">\(D=\sqrt{H^2+W^2}\)</span> is the length of the
+diagonal of the image.
+<center>
+<img alt="hough transform rotheta space" src="ref/hough_rotheta.jpg" style="width:90%">
+</center>
+<p>Given a point <span class="math inline">\((x_1, y_1)\)</span>, the
+parameters of all straight lines passing through this point satisfy
+equation <span class="math display">\[\rho = cos(\theta)\;x_1 +
+sin(\theta)\;y_1,\]</span> which is a cosine curve in the Hough Space
+instead of a straight line (Leavers, 1992). <!--
+For a straight line with parameters $(\rho_0, \theta_0)$, if $n$ points $(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)$ are all on this line, then the corresponding $n$ function curves in $\rho$-$\theta$ space
+$$
+\begin{matrix}
+\rho = cos(\theta)\;x_1 + sin(\theta)\;y_1, \\
+\vdots \\
+\rho = cos(\theta)\;x_n + sin(\theta)\;y_n,
+\end{matrix}
+$$
+intersect at point $(\rho_0, \theta_0)$.--></p>
+<h2 data-number="5.3" id="the-algorithm"><span
+class="header-section-number">5.3</span> The Algorithm</h2>
+<p>Now we can design a voting procedure to elect the most possible
+straight lines as follows:</p>
+<ol type="1">
+<li>Discretize <span class="math inline">\(\rho\)</span>-<span
+class="math inline">\(\theta\)</span> space into a grid of cells, so
+that there are finite number of possible candidates. A proper
+discretization for <span class="math inline">\(\theta\)</span> may be
+dividing <span class="math inline">\([0, \pi]\)</span> into 100-1000
+parts. For <span class="math inline">\(\rho\)</span>, 1 should be a
+proper cell length.
+<center>
+<img alt="hough transform result" src="ref/hough_grid.jpg" style="width:60%">
+</center></li>
+<li>Create a 2D array called the accumulator representing the Hough
+Space with dimension (num_rhos, num_thetas) and initialize all its
+values to zero.</li>
+<li>For each edge pixel <span class="math inline">\((x, y)\)</span>,
+loop through all possible values of <span
+class="math inline">\(\theta\)</span>, calculate the corresponding <span
+class="math inline">\(\rho\)</span> using function function <span
+class="math inline">\(\rho = cos(\theta)\;x + sin(\theta)\;y\)</span>,
+find the <span class="math inline">\(\theta\)</span> and <span
+class="math inline">\(\rho\)</span> index in the accumulator, and
+increment the accumulator base on those index pairs.</li>
+<li>Find local maximum. Find the top <span
+class="math inline">\(n\)</span> cells in the accumulator, return the
+corresponding <span class="math inline">\(n\)</span> pairs of <span
+class="math inline">\((\rho, \theta)\)</span>.
+<center>
+<img alt="hough transform result" src="ref/houghed.png" style="width:60%">
+</center></li>
+</ol>
+<h1 data-number="6" id="assignment"><span
+class="header-section-number">6</span> Assignment</h1>
+<h2 data-number="6.1" id="part-i-filter-basics"><span
+class="header-section-number">6.1</span> Part I: Filter basics</h2>
+<p>Sharpen <code>data/rain.jpeg</code> and eliminate rain drops in it by
+median filter.</p>
+<ol type="1">
+<li><p>Implement your sharpening filter and perform it on
+<code>data/rain.jpeg</code>. Save your results as
+<code>data/1.1_sharpened.jpg</code>. To get an obvious result, you may
+choose a relatively large <span class="math inline">\(\alpha\)</span>.
+(2 points)</p></li>
+<li><p>Implement your own median filter and perform it on
+<code>data/rain.jpeg</code> to eliminate rain drops. Save results to
+<code>data/1.2_derained.jpg</code>. To get a good deraining result, the
+filter size should be as small as possible but large enough to eliminate
+rain drops. (2 points)</p></li>
+</ol>
+<h2 data-number="6.2" id="part-ii-canny-edge-detector"><span
+class="header-section-number">6.2</span> Part II: Canny edge
+detector</h2>
+<p>Implement Canny edge detector to detect edges in
+<code>data/road.jpeg</code>. Your program should contain following
+steps:</p>
+<ol type="1">
+<li>Convert colour image into grayscale image, and save as
+<code>data/2.1_gray.jpg</code>. (1 point)</li>
+<li>Choose a proper <code>sigma</code> to perform Gaussian smoothing,
+save the result as <code>data/2.2_gauss.jpg</code>. Discuss how
+<code>sigma</code> affects final edge detection results. (2 points)</li>
+<li>Apply sobel operator, save the x-gradient <span
+class="math inline">\(G_x\)</span>, y-gradient <span
+class="math inline">\(G_y\)</span> and magnitude <span
+class="math inline">\(G\)</span> as <code>data/2.3_G_x.jpg</code>,
+<code>data/2.3_G_y.jpg</code> and <code>data/2.3_G.jpg</code>. (3
+points)</li>
+<li>Do the non-maximum value suppression. Save the suppression result to
+<code>data/2.4_supress.jpg</code>. (3 points)</li>
+<li>Do the hysteresis thresholding. Choose two proper threshold – low
+and high, then binarize your suppression result via Hysteresis
+thresholding. Save binarization result by lower threshold as
+<code>data/2.5_edgemap_low.jpg</code>, result by high threshold as
+<code>data/2.5_edgemap_high.jpg</code>. Save the final result by
+Hysteresis thresholding as <code>data/2.5_edgemap.jpg</code>. Discuss
+how different thresholds affect the final edgemap. (2 points, one point
+for <code>edgemap_low.jpg</code> and <code>edgemap_high.jpg</code>, one
+for <code>edgemap.jpg</code>)</li>
+</ol>
+<h2 data-number="6.3" id="bonus-hough-transform"><span
+class="header-section-number">6.3</span> Bonus: Hough transform</h2>
+<p>This part follows part II Canny edge detector to recognize straight
+lines in <code>data/2.5_edgemap.jpg</code>.</p>
+<ol start="6" type="1">
+<li>Hough Transform. Save the “voting” result (the accumulator) as
+<code>data/2.6_hough.jpg</code>. (2 points)</li>
+<li>Find out several most possible straight lines. Draw them on original
+image, then save as <code>data/2.7_detection_result.jpg</code>. To draw
+lines on image, see <a
+href="https://stackoverflow.com/questions/13053443/drawing-a-line-on-an-image-with-pil">this
+example</a>. (1 points)</li>
+</ol>
+<h2 data-number="6.4" id="submission-instruction"><span
+class="header-section-number">6.4</span> Submission Instruction</h2>
+<p>OpenCV package <code>cv2</code> is <strong>NOT</strong> allowed in
+this assignment.</p>
+<p>Your submission should contain:</p>
+<ol type="1">
+<li>All intermediate results (images <code>data/*.jpg</code> you are
+asked to save) and the two discussions in Part II step 2 and step 5
+(saved in <code>discussion.pdf</code>).</li>
+<li>Runnable programs <code>code/edge.py</code> and
+<code>code/filter.py</code> that can reproduce your results.</li>
+</ol>
+<p>Please submit the results before <strong>23:59 on March 15
+(Wednesday)</strong>. You may submit as many times as you want, but only
+your latest submission before the deadline will be graded.</p>
+<h1 data-number="7" id="how-to-contact-us"><span
+class="header-section-number">7</span> How to contact us</h1>
+<p>Feel free to contact us via MS teams or by email:
+<code>Zhong, Yongfeng7(yongfeng7.zhong@connect.polyu.hk)</code>,
+<code>Fan, Lu(complu.fan@connect.polyu.hk)</code>,
+<code>Feng, Yujie(yujie.feng@connect.polyu.hk)</code>.</p>
+</body>
+</html>

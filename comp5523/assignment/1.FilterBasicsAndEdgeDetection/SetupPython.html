@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="LI, Qimai; Zhong, Yongfeng" />
+  <meta name="dcterms.date" content="November 16, 2021, modify on
+September 16, 2022" />
+  <title>Preparation</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="ref/github-pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Preparation</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#official-python-tutorial"
+id="toc-official-python-tutorial"><span
+class="toc-section-number">1</span> Official Python Tutorial</a></li>
+<li><a href="#setup-python-environment"
+id="toc-setup-python-environment"><span
+class="toc-section-number">2</span> Setup Python Environment</a>
+<ul>
+<li><a href="#install-anaconda" id="toc-install-anaconda"><span
+class="toc-section-number">2.1</span> Install Anaconda</a></li>
+<li><a href="#update-environment-variables"
+id="toc-update-environment-variables"><span
+class="toc-section-number">2.2</span> Update Environment
+Variables</a></li>
+<li><a href="#install-pycharm" id="toc-install-pycharm"><span
+class="toc-section-number">2.3</span> Install PyCharm</a></li>
+</ul></li>
+</ul>
+</nav>
+<!-- ### Watch recordings at Sharepoint
+1. Speed up videos: chrome extension [Video Speed Controller](https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk?hl=en).
+2. Subtitles: turn on subtitles at right upper corners.
+<center>
+<img alt="line equation" src="ref/subtitle.jpg" style="width:40%">
+</center> -->
+<h1 data-number="1" id="official-python-tutorial"><span
+class="header-section-number">1</span> Official Python Tutorial</h1>
+<p>This course presumes that we have learned Python before. If not, I
+recommend you to read the official <a
+href="https://docs.python.org/3/tutorial/index.html">Python
+Tutorial</a>, which is one of the best python tutorials.</p>
+<p>Get help information in Python: we may forget the usage of a specific
+function sometimes. In this case, we can use a built in function
+<code>help</code> to get the information about a certain function. E.g.,
+if we forget how to use <code>print</code> function, we can get help by
+the following command:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(<span class="bu">print</span>)</span></code></pre></div>
+<p>We will see the following information, showing the meaning of each
+argument:</p>
+<pre><code>Help on built-in function print in module builtins:
+
+print(...)
+    print(value, ..., sep=&#39; &#39;, end=&#39;\n&#39;, file=sys.stdout, flush=False)
+
+    Prints the values to a stream, or to sys.stdout by default.
+    Optional keyword arguments:
+    file:  a file-like object (stream); defaults to the current sys.stdout.
+
+    sep:   string inserted between values, default a space.
+    end:   string appended after the last value, default a newline.
+    flush: whether to forcibly flush the stream.</code></pre>
+<h1 data-number="2" id="setup-python-environment"><span
+class="header-section-number">2</span> Setup Python Environment</h1>
+<p>We need Python3 and several Python packages, including Numpy, Pillow,
+and PyTorch, to finish the programming assignments of this course. If
+you know how to setup and manage your Python environment, just do it in
+your preferred way. If not, you can follow the instructions in this
+section to setup Python3 development environment step by step.</p>
+<h2 data-number="2.1" id="install-anaconda"><span
+class="header-section-number">2.1</span> Install Anaconda</h2>
+<p>The most convenient way to setup a Python environment is to install
+Anaconda, a Python environment management system with lots of useful
+third-party packages. Anaconda already contains nearly all packages we
+need.</p>
+<p>Please go to <a
+href="https://www.anaconda.com/products/individual">Anaconda download
+page</a> and download a suitable version of Anaconda3 for your system.
+You may download the graphic installer or command line installer as you
+prefer. Follow the <a
+href="https://docs.anaconda.com/anaconda/install/">Installation page</a>
+if needed.</p>
+<!-- ### Validate your Install
+After the installation, open "Anaconda Prompt" from your Windows Start menu (or corresponding terminal in OS and Linux), and type command `conda --version` and `python --version`. If you see the following output, you have installed Conda successfully.
+
+```bash
+(base) C:\>conda --version
+conda 4.8.2
+
+(base) C:\>python --version
+Python 3.7.4
+``` -->
+<!-- ## Install IPython
+IPython is the most popular interactive shell for python. Beginners can try anything they just learn in IPython quickly. You could install ipython via following command in Anaconda Prompt.
+
+```bash
+(base) C:\>conda install ipython
+...
+Proceed ([y]/n)?y
+...
+``` -->
+<h2 data-number="2.2" id="update-environment-variables"><span
+class="header-section-number">2.2</span> Update Environment
+Variables</h2>
+<p>Before you run, debug your python code on a terminal, you need to run
+the following scripts before you using python. You can also add those
+scripts to <code>~/.bashrc</code> or <code>~/.zshrc</code>, just to make
+sure they will be run automatically every time after you start your
+computer.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ANACONDA_ROOT</span><span class="op">=</span>your_own_anaconda3_path</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="va">$ANACONDA_ROOT</span>/bin:<span class="va">$PATH</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PYTHONPATH</span><span class="op">=</span><span class="va">$ANACONDA_ROOT</span>/lib/python3.9/site-packages:<span class="va">$PYTHONPATH</span></span></code></pre></div>
+<p>Now you can start your programming:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> code/filter.py</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># debug</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pdb code/filter.py</span></code></pre></div>
+<h2 data-number="2.3" id="install-pycharm"><span
+class="header-section-number">2.3</span> Install PyCharm</h2>
+<p>You can also use a integrated development environment (IDE), Pycharm
+to run your python code. It is a very convenient tool that can help you
+manage, run, debug, and deploy Python programs. Go to this link <a
+href="https://www.jetbrains.com/pycharm/download/">community version</a>
+to download and install it if you want.</p>
+<p>After install PyCharm, you need to configure it to use Anaconda you
+installed before.</p>
+<ol type="1">
+<li>Open PyCharm Preference by pressing -PyCharm -&gt; Preferences</li>
+<li>Search “Python interpreter” in the up left corner.</li>
+<li>Click “<strong>Add interpreter</strong>-&gt; <strong>Add Local
+interpreter</strong>” at the right side.</li>
+<li>In the new interface, choose “<strong>Conda
+Environment</strong>”.</li>
+<li>Select “<strong>Interpreter</strong>” and “<strong>Conda
+executable</strong>” as the one you installed:
+<ul>
+<li>Example on Win10:
+<ul>
+<li>Interpreter:
+<code>C:\Users\&lt;USERNAME&gt;\anaconda3\python.exe</code></li>
+<li>Conda executable:
+<code>C:\Users\&lt;USERNAME&gt;\anaconda3\Scripts\conda.exe</code></li>
+</ul></li>
+<li>Example on macOS:
+<ul>
+<li>Interpreter:
+<code>/Users/&lt;USERNAME&gt;/anaconda3/bin/python</code></li>
+<li>Conda executable: no need to select.</li>
+</ul></li>
+</ul></li>
+<li>Check “<strong>Make available to all projects</strong>” and click
+“<strong>OK</strong>”.</li>
+<li>Now come back to previous interface. Wait and then click
+“<strong>OK</strong>” again. –&gt; <!--
+1. Open PyCharm configuration by pressing
+    - "__Ctrl__ + __Alt__ + __s__" on Windows, or
+    - "__Cmd⌘__ + __,__" on macOS.
+2. Search "interpreter" in left up corner.
+3. Choose "⚙ -> __Add__" at right side.
+4. In the new interface, choose "__Conda Environment__ -> __Existing environment__"
+5. Select "__Interpreter__" and "__Conda executable__" as the one you installed:
+    - Example on Win10:
+        - Interpreter:  `C:\Users\<USERNAME>\anaconda3\python.exe`
+        - Conda executable: `C:\Users\<USERNAME>\anaconda3\Scripts\conda.exe`
+    - Example on macOS:
+        - Interpreter: `/Users/<USERNAME>/anaconda3/bin/python`
+        - Conda executable: no need to select.
+6. Check "__Make available to all projects__" and click "__OK__".
+7. Now you come back to previous interface. Wait for it finishing processing, then click "__OK__" again.
+--></li>
+</ol>
+<p>After the configuation, PyCharm projects can use Anaconda as the
+default Python environment.</p>
+</body>
+</html>
