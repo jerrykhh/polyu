@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="LI, Qimai; Zhong Yongfeng" />
+  <meta name="dcterms.date" content="October 11, 2021, modify on October
+19, 2022" />
+  <title>Keypoints Detection and Matching</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="image/github-pandoc.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Keypoints Detection and Matching</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#install-opencv" id="toc-install-opencv"><span
+class="toc-section-number">1</span> Install OpenCV</a>
+<ul>
+<li><a href="#on-windows" id="toc-on-windows"><span
+class="toc-section-number">1.1</span> On Windows</a></li>
+<li><a href="#on-macos" id="toc-on-macos"><span
+class="toc-section-number">1.2</span> On macOS</a></li>
+</ul></li>
+<li><a href="#readsaveshow-images-in-opencv"
+id="toc-readsaveshow-images-in-opencv"><span
+class="toc-section-number">2</span> Read/save/show images in OpenCV</a>
+<ul>
+<li><a href="#read-images" id="toc-read-images"><span
+class="toc-section-number">2.1</span> Read images</a></li>
+<li><a href="#save-images" id="toc-save-images"><span
+class="toc-section-number">2.2</span> Save images</a></li>
+<li><a href="#show-images" id="toc-show-images"><span
+class="toc-section-number">2.3</span> Show images</a></li>
+<li><a href="#some-utilities" id="toc-some-utilities"><span
+class="toc-section-number">2.4</span> Some utilities</a></li>
+</ul></li>
+<li><a href="#a-brief-history-of-keypoints-detection"
+id="toc-a-brief-history-of-keypoints-detection"><span
+class="toc-section-number">3</span> A brief history of keypoints
+detection</a></li>
+<li><a href="#image-alignment-via-sift"
+id="toc-image-alignment-via-sift"><span
+class="toc-section-number">4</span> Image alignment via SIFT</a>
+<ul>
+<li><a href="#detect-keypoints-and-generate-descriptors"
+id="toc-detect-keypoints-and-generate-descriptors"><span
+class="toc-section-number">4.1</span> Detect keypoints and generate
+descriptors</a></li>
+<li><a href="#matching" id="toc-matching"><span
+class="toc-section-number">4.2</span> Matching</a></li>
+<li><a href="#stich-images" id="toc-stich-images"><span
+class="toc-section-number">4.3</span> Stich images</a></li>
+</ul></li>
+<li><a href="#panorama-stitching" id="toc-panorama-stitching"><span
+class="toc-section-number">5</span> Panorama stitching</a></li>
+<li><a href="#video-stabilization-and-stack-denoising"
+id="toc-video-stabilization-and-stack-denoising"><span
+class="toc-section-number">6</span> Video stabilization and stack
+denoising</a>
+<ul>
+<li><a href="#long-exposure" id="toc-long-exposure"><span
+class="toc-section-number">6.1</span> Long exposure</a></li>
+<li><a href="#deraining" id="toc-deraining"><span
+class="toc-section-number">6.2</span> Deraining</a></li>
+</ul></li>
+<li><a href="#assignment-12-points-2-bonus-points"
+id="toc-assignment-12-points-2-bonus-points"><span
+class="toc-section-number">7</span> Assignment (12 points + 2 bonus
+points)</a>
+<ul>
+<li><a href="#image-alignment-via-sift-9-points"
+id="toc-image-alignment-via-sift-9-points"><span
+class="toc-section-number">7.1</span> Image alignment via SIFT (9
+points)</a></li>
+<li><a href="#panorama-stitching-3-points"
+id="toc-panorama-stitching-3-points"><span
+class="toc-section-number">7.2</span> Panorama stitching (3
+points)</a></li>
+<li><a href="#video-stabilization-and-deraining-2-bonus-points"
+id="toc-video-stabilization-and-deraining-2-bonus-points"><span
+class="toc-section-number">7.3</span> Video stabilization and deraining
+(2 bonus points)</a></li>
+<li><a href="#submission-instruction"
+id="toc-submission-instruction"><span
+class="toc-section-number">7.4</span> Submission instruction</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="install-opencv"><span
+class="header-section-number">1</span> Install OpenCV</h1>
+<p>OpenCV (Open Source Computer Vision Library) is a powerful library
+designed for computer vision process. This library is cross-platform and
+free for use under the open-source Apache 2 License. It is written in
+C++ but it also provides a Python interface. In this tutorial, we use
+some build-in functions provided by OpenCV to detect, match keypoints
+and transform images.</p>
+<h2 data-number="1.1" id="on-windows"><span
+class="header-section-number">1.1</span> On Windows</h2>
+Please open your anaconda propmt from Start menu.
+<center>
+<img src="image/md/conda_prompt.jpg" style="width: 50%"/>
+</center>
+<p>Create a new python environment with <code>opencv-python 4.5</code>,
+<code>tqdm</code>, and <code>ipython</code> by following command.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">base</span><span class="kw">)</span> <span class="ex">C:\Users\%USERNAME%</span><span class="op">&gt;</span> conda create <span class="at">--name</span> opencv <span class="at">-c</span> conda-forge opencv=4.5 tqdm ipython</span></code></pre></div>
+<p>Test your installation and you will see the version of OpenCV is
+<code>4.5.x</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">base</span><span class="kw">)</span> <span class="ex">C:\Users\%USERNAME%</span><span class="op">&gt;</span> conda activate opencv</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">opencv</span><span class="kw">)</span> <span class="ex">C:\Users\%USERNAME%</span><span class="op">&gt;</span> python <span class="at">-c</span> <span class="st">&quot;import cv2; print(cv2.__version__)&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">4.5.3</span></span></code></pre></div>
+<p>Each time you open anaconda propmt, you need to activate this
+environment for using OpenCV.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">base</span><span class="kw">)</span> <span class="ex">C:\Users\%USERNAME%</span><span class="op">&gt;</span> conda activate opencv</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">opencv</span><span class="kw">)</span> <span class="ex">C:\Users\%USERNAME%</span><span class="op">&gt;</span> conda activate opencv</span></code></pre></div>
+<p>The newly created environment is located at
+<code>C:\Users\%USERNAME%\anaconda3\envs\opencv</code>. If you are using
+PyCharm, do not forget to set your project interpreter as shown in
+<code>SetupPython.html</code> in last Lab tutorial.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set project interpreter of PyCharm to</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">C:\Users\%USERNAME%\anaconda3\envs\opencv\python.exe</span></span></code></pre></div>
+<h2 data-number="1.2" id="on-macos"><span
+class="header-section-number">1.2</span> On macOS</h2>
+<p>Open your Terminal app and create a new python environment with
+<code>opencv-python 4.5</code>, <code>tqdm</code>, and
+<code>ipython</code> by following command.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> conda create <span class="at">--name</span> opencv <span class="at">-c</span> conda-forge opencv=4.5 tqdm ipython</span></code></pre></div>
+<p>Test your installation and you shall see the version of OpenCV is
+<code>4.5.x</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> conda activate opencv</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> python <span class="at">-c</span> <span class="st">&quot;import cv2; print(cv2.__version__)&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">4.5.3</span></span></code></pre></div>
+<p>Each time you open anaconda propmt, you need to activate this
+environment before using OpenCV.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> conda activate opencv</span></code></pre></div>
+<p>The newly created environment is located at
+<code>/Users/USERNAME/miniconda3/envs/opencv</code>. If you are using
+PyCharm, do not forget to set your project interpreter as shown in
+<code>SetupPython.html</code> in last Lab tutorial.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set project interpreter of PyCharm to</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/Users/USERNAME/miniconda3/envs/opencv/bin/python</span></span></code></pre></div>
+<h1 data-number="2" id="readsaveshow-images-in-opencv"><span
+class="header-section-number">2</span> Read/save/show images in
+OpenCV</h1>
+<p>OpenCV provides a set of APIs for us to easily read/write/show
+images.</p>
+<h2 data-number="2.1" id="read-images"><span
+class="header-section-number">2.1</span> Read images</h2>
+<p><code>cv2.imread</code> reads in an image as <code>np.ndarray</code>
+object with <code>dtype==np.uint8</code>, i.e., 8-bit unsigned
+integer.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> cv2.imread(<span class="st">&#39;image/md/left.jpg&#39;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(img)   <span class="co"># np.ndarray</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>img.shape   <span class="co"># (1512, 2016, 3) [H, W, C] of the image</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>img.dtype   <span class="co"># dtype(&#39;uint8&#39;)</span></span></code></pre></div>
+<p>You had better convert it to floating types before further processing
+to avoid any possible overflow.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> np.float32(img)</span></code></pre></div>
+<h2 data-number="2.2" id="save-images"><span
+class="header-section-number">2.2</span> Save images</h2>
+<p><code>cv2.imwrite</code> takes an <code>np.ndarray</code> object as
+image and save it to file. If the <code>dtype</code> of the array is not
+<code>np.uint8</code>, the function will convert it to
+<code>np.uint8</code> before saving.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cv2.imwrite(<span class="st">&#39;tmp.jpg&#39;</span>,img) <span class="co"># return True, if write successfully.</span></span></code></pre></div>
+<h2 data-number="2.3" id="show-images"><span
+class="header-section-number">2.3</span> Show images</h2>
+<p><code>cv2.imshow</code> shows an image, but the image won’t be
+displayed util you call <code>cv2.waitKey</code>.</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cv2.imshow(<span class="st">&quot;window title&quot;</span>, img)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>cv2.waitKey(<span class="dv">1000</span>) <span class="co"># show the image for 1 seconds before it automatically closes</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cv2.waitKey(<span class="dv">0</span>) <span class="co"># the window would wait till any key is pressed</span></span></code></pre></div>
+<p>Use <code>cv2.destroyAllWindows</code> to close all windows.
+<code>cv2.waitKey</code> should also be called to let OpenCV update
+(close) windows.</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cv2.destroyAllWindows()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cv2.waitKey(<span class="dv">1</span>)</span></code></pre></div>
+<h2 data-number="2.4" id="some-utilities"><span
+class="header-section-number">2.4</span> Some utilities</h2>
+<p>Some utility function are provided in <code>code/utils.py</code> for
+you to easily read/write/show images.</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> imread, imshow, write_and_show, destroyAllWindows</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> imread(<span class="st">&#39;image/md/left.jpg&#39;</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>imshow(<span class="st">&#39;tmp.jpg&#39;</span>, img)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>write_and_show(<span class="st">&#39;tmp.jpg&#39;</span>,img)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># give you some time to view all windows before close</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>destroyAllWindows()  </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># close immediately</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>destroyAllWindows(wait_key<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<h1 data-number="3" id="a-brief-history-of-keypoints-detection"><span
+class="header-section-number">3</span> A brief history of keypoints
+detection</h1>
+<p>This brief history and review is summarised by OpenCV-Python
+tutorials<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>.</p>
+<ol type="1">
+<li><p>Harris Corner Detection:<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>One early attempt to find corners was done by Chris Harris &amp; Mike
+Stephens in their paper ‘A Combined Corner and Edge Detector’ in 1988,
+which is called Harris Corner Detector.</p></li>
+<li><p>SIFT (Scale-Invariant Feature Transform):<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>Harris corner detector is not good enough when the scale of image
+changes. D.Lowe developed a breakthrough method to find scale-invariant
+features, which is called SIFT in 2004.</p></li>
+<li><p>SURF (Speeded-Up Robust Features):<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>SIFT is really good, but not fast enough. In 2006, three people, Bay,
+H., Tuytelaars, T. and Van Gool, L, introduced a new algorithm called
+SURF. As name suggests, it is a speeded-up version of SIFT.</p></li>
+<li><p>ORB (Oriented FAST and Rotated BRIEF):<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p>This algorithm was brought up by Ethan Rublee, Vincent Rabaud, Kurt
+Konolige and Gary R. Bradski in their paper ORB: An efficient
+alternative to SIFT or SURF in 2011. As the title says, it is a good
+alternative to SIFT and SURF in computation cost, matching performance
+and mainly the patents. Yes, SIFT and SURF are patented and you are
+supposed to pay them for its use. But ORB is not !!!</p></li>
+</ol>
+<p>In summary, Harris is the early one containing basic idea of corner
+detection. SIFT is the first mature one, but slow. SURF is a speeded-up
+version of SIFT. ORB is a free alternative for SIFT and SURF.</p>
+<p>However, the patent of SIFT expired in March of 2020, so SIFT is free
+to use now ✌️! But patent of SURF is still valid now 🙁.</p>
+<h1 data-number="4" id="image-alignment-via-sift"><span
+class="header-section-number">4</span> Image alignment via SIFT</h1>
+<p>In this section, we are going to detect keypoints in two images via
+the classic SIFT detector, find the corresponding keypoints, calculate
+the transformation and then align these two images. OpenCV also has APIs
+for other keypoint detection alogrithm, so once you know how to align
+two images with SIFT, you can easily test other keypoint detection
+algorithms.</p>
+<ol type="1">
+<li>Detect keypoints and generate keypoint descriptors.</li>
+<li>Match detected keypoints between two images.</li>
+<li>Align two images and stich them into one.</li>
+</ol>
+<p>The two example images and final stitching result are shown here.</p>
+<center>
+<img alt="left.jpg" style="width:40%" src="image/md/left.jpg"/>
+<img alt="right.jpg" style="width:40%" src="image/md/right.jpg"/>
+<img alt="right.jpg" style="width:80%" src="image/md/stack.jpg"/>
+<p>
+Fig 1. (a) image 1. (b) image 2. (c) stitching result.
+</p>
+</center>
+<h2 data-number="4.1"
+id="detect-keypoints-and-generate-descriptors"><span
+class="header-section-number">4.1</span> Detect keypoints and generate
+descriptors</h2>
+<p>First, we need to make sure the data type of our images are
+<code>np.uint8</code> and then convert it to grayscale. Because all
+keypoint detector in OpenCV can only deal with single-channel images. To
+process colourful image, we can either convert them to grayscale, or
+perform detection on each channel separately.</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> imread(<span class="st">&#39;image/md/left.jpg&#39;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> np.uint8(img) <span class="co"># make sure it&#39;s np.uint8</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>img_gray <span class="op">=</span> cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) <span class="co"># to Gray Scale</span></span></code></pre></div>
+<p>Then we detect keypoints in images and generate descriptors for them
+via SIFT.</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SIFT</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sift <span class="op">=</span> cv2.SIFT_create()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>keypoints, descriptors <span class="op">=</span> sift.detectAndCompute(img_gray, mask<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p>Assume <code>N</code> keypoints are detected, then return values have
+following structure:</p>
+<ul>
+<li><code>keypoints</code> is a list containing N
+<code>cv2.KeyPoint</code> objects. Every keypoint has following
+attributes:
+<ul>
+<li><code>angle</code>: orientation of the descriptor.</li>
+<li><code>pt</code>: location of the keypoint in form of tuple
+<code>(x,y)</code>.</li>
+<li><code>response</code>: keypoint response. the higher, the more
+likely it is a keypoint. For SIFT, this is the Difference of
+Gauss（DoG）response.</li>
+<li><code>size</code>: scale of the keypoint.</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">type</span>(keypoints)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> p <span class="op">=</span> keypoints[<span class="dv">0</span>]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> pprint({name: p.<span class="fu">__getattribute__</span>(name) <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">dir</span>(p) <span class="cf">if</span> <span class="kw">not</span> name.startswith(<span class="st">&#39;__&#39;</span>)})</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># You shall see something like this</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>{<span class="st">&#39;angle&#39;</span>: <span class="fl">83.27447509765625</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a> ...,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;pt&#39;</span>: (<span class="fl">2.505418539047241</span>, <span class="fl">1013.8984375</span>),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;response&#39;</span>: <span class="fl">0.01711214892566204</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;size&#39;</span>: <span class="fl">2.132431745529175</span>}</span></code></pre></div>
+<ul>
+<li><code>descriptors</code> is an <code>np.array</code> of size
+<code>(N, 128)</code>. Each row stores an 128-dimensional descriptor for
+the corresponding keypoint.</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> descriptors</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>array([[  <span class="fl">3.</span>,   <span class="fl">9.</span>,  <span class="fl">17.</span>, ...,   <span class="fl">4.</span>,   <span class="fl">2.</span>,   <span class="fl">4.</span>],</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>       [ <span class="fl">39.</span>,   <span class="fl">5.</span>,   <span class="fl">7.</span>, ...,   <span class="fl">0.</span>,   <span class="fl">1.</span>,   <span class="fl">6.</span>],</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>       [  <span class="fl">0.</span>,   <span class="fl">0.</span>,   <span class="fl">0.</span>, ...,  <span class="fl">15.</span>,  <span class="fl">12.</span>,  <span class="fl">11.</span>],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>       ...,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       [ <span class="fl">30.</span>,  <span class="fl">52.</span>,   <span class="fl">4.</span>, ...,   <span class="fl">0.</span>,   <span class="fl">2.</span>,  <span class="fl">13.</span>],</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>       [  <span class="fl">0.</span>,   <span class="fl">0.</span>,   <span class="fl">0.</span>, ...,   <span class="fl">4.</span>,   <span class="fl">2.</span>, <span class="fl">136.</span>],</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>       [ <span class="fl">50.</span>, <span class="fl">131.</span>,  <span class="fl">30.</span>, ...,   <span class="fl">0.</span>,   <span class="fl">0.</span>,   <span class="fl">0.</span>]], dtype<span class="op">=</span>float32)</span></code></pre></div>
+<p>We draw the detected keypoints on images by
+<code>cv2.drawKeypoints</code> function. Flag
+<code>cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS</code> tells the
+function to show not only the location but also the size and orientation
+of keypoints.</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># draw keypoints</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>img_keypoints <span class="op">=</span> cv2.drawKeypoints(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        image     <span class="op">=</span> img,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        keypoints <span class="op">=</span> keypoints,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        outImage  <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        flags     <span class="op">=</span> cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>write_and_show(<span class="st">&#39;results/img_keypoints.jpg&#39;</span>, img_keypoints)</span></code></pre></div>
+The detection results of two example images:
+<center>
+<a href="image/md/left_keypoints.jpg">
+<img alt="left keypoints" style="width:45%" src="image/md/left_keypoints.jpg"/>
+</a>    <a href="image/md/right_keypoints.jpg">
+<img alt="right keypoints" style="width:45%" src="image/md/right_keypoints.jpg"/>
+</a>
+<p>
+Fig 2. Keypoints detected.
+</p>
+</center>
+<h2 data-number="4.2" id="matching"><span
+class="header-section-number">4.2</span> Matching</h2>
+<p>Assume we have detected keypoints in both image 1 and image 2 and
+generate their descriptors like this:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sift <span class="op">=</span> cv2.SIFT_create()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>keypoints1, descriptors1 <span class="op">=</span> sift.detectAndCompute(img1_gray, <span class="va">None</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>keypoints2, descriptors2 <span class="op">=</span> sift.detectAndCompute(img2_gray, <span class="va">None</span>)</span></code></pre></div>
+<p>The next step is to match keypoints between two images. This is done
+by finding keypoint pairs from two images with similar descriptors. The
+descriptor describes what the area around a keypoint looks like. Similar
+descriptors indicate similar patterns. The similarity of descriptors is
+measured by their euclidean distance. Assume we have two 128-dimensional
+keypoint descriptors <span
+class="math inline">\(u,v\in\mathbb{R}^{128}\)</span>, their distance is
+defined as <span class="math display">\[d(u,v) =
+\sqrt{\sum_{i=1}^{128}(u_i-v_i)^2}\]</span> Small <span
+class="math inline">\(d(u,v)\)</span> value indicates keypoint <span
+class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> looks similar. For each keypoint in
+image 1, we always match it with the most similar keypoint from image
+2.</p>
+<h3 data-number="4.2.1" id="brute-force-matcher"><span
+class="header-section-number">4.2.1</span> Brute-force matcher</h3>
+<p>The matching could be done by <code>cv2.BFMatcher</code>:</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create matcher</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>matcher <span class="op">=</span> cv2.BFMatcher_create(crossCheck<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get match</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>match <span class="op">=</span> matcher.match(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            queryDescriptors <span class="op">=</span> descriptors1,    <span class="co"># query</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>            trainDescriptors <span class="op">=</span> descriptors2)    <span class="co"># train</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Docstring:</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># match(queryDescriptors, trainDescriptors[, mask]) -&gt; matches</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># .   @brief Finds the best match for each descriptor from a query set.</span></span></code></pre></div>
+<p>The returned <code>match</code> is a list of <code>cv2.DMatch</code>
+object with following attributes:</p>
+<ul>
+<li><code>distance</code>: euclidean distance between two matched
+keypoints as above formula.</li>
+<li><code>queryIdx</code>: the index of matched keypoints in
+<strong>image 1</strong>.</li>
+<li><code>trainIdx</code>: the index of matched keypoints in
+<strong>image 2</strong>.</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">type</span>(match)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> m <span class="op">=</span> match[<span class="dv">0</span>]</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> pprint({name: m.<span class="fu">__getattribute__</span>(name) <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">dir</span>(m) <span class="cf">if</span> <span class="kw">not</span> name.startswith(<span class="st">&#39;__&#39;</span>)})</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>{<span class="st">&#39;distance&#39;</span>: <span class="fl">236.065673828125</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a> ...,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;queryIdx&#39;</span>: <span class="dv">1</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;trainIdx&#39;</span>: <span class="dv">17140</span>}</span></code></pre></div>
+<h3 data-number="4.2.2" id="flann-based-matcher"><span
+class="header-section-number">4.2.2</span> FLANN based matcher</h3>
+<p>“BFMatcher” stands for “Brute-Forch Matcher”. Brute-Force matcher is
+simple. It matches the descriptor in first set with all other features
+in second set according to the distance calculation then the closest one
+is returned.</p>
+<p>However, BFMatcher is super slow. FLANN is a fast version of
+BFMatcher. FLANN stands for “Fast Library for Approximate Nearest
+Neighbors”. Its usage is similar to BFMatcher but works more faster for
+large datasets.</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create macher</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>matcher <span class="op">=</span> cv2.FlannBasedMatcher_create()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get match</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>match <span class="op">=</span> matcher.match(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>            queryDescriptors <span class="op">=</span> descriptors1,    <span class="co"># query</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            trainDescriptors <span class="op">=</span> descriptors2)    <span class="co"># train</span></span></code></pre></div>
+<h3 data-number="4.2.3" id="lowes-ratio-test"><span
+class="header-section-number">4.2.3</span> Lowe’s ratio test</h3>
+<p>Sometimes the matching result contains lots of false matches. We
+could remove part of them by ratio test as shown in Lowe’s paper. In
+Lowe’s ratio test, each keypoint from the first image is matched with a
+number of keypoints (e.g. 2 best keypoints) from the second image. If
+the two matched distances are not sufficiently different, then this
+keypoint will be eliminated and not be used for further
+calculations.</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>matcher <span class="op">=</span> cv2.FlannBasedMatcher_create()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get best two matches</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>best_2 <span class="op">=</span> matcher.knnMatch(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>            queryDescriptors <span class="op">=</span> descriptors1,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>            trainDescriptors <span class="op">=</span> descriptors2,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>            k                <span class="op">=</span> <span class="dv">2</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Lowe&#39;s ratio test</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>ratio <span class="op">=</span> <span class="fl">0.7</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>match <span class="op">=</span> []</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m,n <span class="kw">in</span> best_2:</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> m.distance <span class="op">&lt;</span> ratio<span class="op">*</span>n.distance:</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        match.append(m)</span></code></pre></div>
+<h3 data-number="4.2.4" id="select-good-matches"><span
+class="header-section-number">4.2.4</span> Select good matches</h3>
+<p><code>distance</code> measures goodness of the match. We only select
+the match with small <code>distance</code>, and remove those with large
+distance.</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort by distance</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>match <span class="op">=</span> <span class="bu">sorted</span>(match, key <span class="op">=</span> <span class="kw">lambda</span> x:x.distance)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># take the best 100 matches</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>match <span class="op">=</span> match[:<span class="dv">100</span>]</span></code></pre></div>
+<h3 data-number="4.2.5" id="draw-match"><span
+class="header-section-number">4.2.5</span> Draw match</h3>
+<p>We can visualize all match keypoints by function
+<code>cv2.drawMatches</code>.</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>match_draw <span class="op">=</span> cv2.drawMatches(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>        img1        <span class="op">=</span> img1,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        keypoints1  <span class="op">=</span> keypoints1,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>        img2        <span class="op">=</span> img2,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        keypoints2  <span class="op">=</span> keypoints2,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        matches1to2 <span class="op">=</span> match,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        outImg      <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        flags       <span class="op">=</span> cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)</span></code></pre></div>
+<center>
+<a href="image/md/match.jpg">
+<img alt="matched keypoints" style="width:90%" src="image/md/match.jpg"/>
+</a>
+<p>
+Fig 3. Matched keypoints.
+</p>
+</center>
+<h2 data-number="4.3" id="stich-images"><span
+class="header-section-number">4.3</span> Stich images</h2>
+<p>The final step is to stitch them into a single large image. First, we
+get coordinates of all matched keypoints:</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get coordinates of matched pairs</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>keypoints1 <span class="op">=</span> np.array([keypoints1[m.queryIdx].pt <span class="cf">for</span> m <span class="kw">in</span> match])</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>keypoints2 <span class="op">=</span> np.array([keypoints2[m.trainIdx].pt <span class="cf">for</span> m <span class="kw">in</span> match])</span></code></pre></div>
+<h3 data-number="4.3.1" id="perspective-transform"><span
+class="header-section-number">4.3.1</span> Perspective transform</h3>
+<p>Then we need to transform image 2 to the same coordinate with image
+1. This is done by calculate a <strong>perspective transform</strong>
+from the corresponding keypoints and then apply the transform to image
+2.</p>
+<p>Hereafter, we refer image 2 as <strong>source image</strong> and
+image 1 as <strong>destination image</strong>. Calculate a perspective
+transform from source to destination image:</p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>src, dst <span class="op">=</span> img2, img1</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>src_kps, dst_kps <span class="op">=</span> (keypoints2, keypoints1)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>T, status <span class="op">=</span> cv2.findHomography(</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                    srcPoints <span class="op">=</span> src_kps,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                    dstPoints <span class="op">=</span> dst_kps,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                    method    <span class="op">=</span> cv2.USAC_ACCURATE,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                    ransacReprojThreshold <span class="op">=</span> <span class="dv">3</span>)</span></code></pre></div>
+<p>Not all matched keypoint pairs are correct. Incorrect matches lead to
+inaccurate transform. We can decide if a match is correct or not by
+checking whether the pairs are close enough after transformation. This
+is exactly what <code>cv2.USAC_ACCURATE</code> method does. The
+parameter <code>ransacReprojThreshold</code> is maximum allowed
+projection error to treat a point pair as correct. In above code, the
+maximum allowed projection error is 3 pixels.</p>
+<p>The return value <code>status</code> indicates the correctness of
+keypoints. <code>status[i]==1</code> means <code>src_kps[i]</code> and
+<code>dst_kps[i]</code> are taken as a correct pair.</p>
+<p>The return value <code>T</code> is a <span
+class="math inline">\(3\times3\)</span> transform matrix <span
+class="math display">\[\begin{equation}
+T = \begin{bmatrix}
+h_{11} &amp; h_{12} &amp; h_{13} \\
+h_{21} &amp; h_{22} &amp; h_{23} \\
+h_{31} &amp; h_{32} &amp; h_{33} \\
+\end{bmatrix},
+\end{equation}\]</span> which transforms a point at <span
+class="math inline">\((x,y)\)</span> to location <span
+class="math inline">\((x&#39;, y&#39;)\)</span>: <span
+class="math display">\[\begin{equation}
+\left\{
+\begin{matrix}
+x&#39; =\dfrac{h_{11}x + h_{12}y + h_{13}}{h_{31}x + h_{32}y + h_{33}}\\
+y&#39; =\dfrac{h_{21}x + h_{22}y + h_{23}}{h_{31}x + h_{32}y + h_{33}}
+\end{matrix} \right.
+\end{equation}\]</span></p>
+<p>We can apply the transformation <code>T</code> to image 2 by
+<code>cv2.warpPerspective</code>.</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>H, W, _ <span class="op">=</span> img2.shape</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> W<span class="op">*</span><span class="dv">2</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>new_img2 <span class="op">=</span> cv2.warpPerspective(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                    src   <span class="op">=</span> img2,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                    M     <span class="op">=</span> T,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                    dsize <span class="op">=</span> (W, H),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                    dst   <span class="op">=</span> np.zeros_like(img2, shape<span class="op">=</span>(H,W)),</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                    borderMode <span class="op">=</span> cv2.BORDER_TRANSPARENT)</span></code></pre></div>
+<p><code>dsize</code> specifies the size of transformed image.</p>
+<center>
+<a href="image/md/new_img2.jpg">
+<img alt="transformed image 2" style="width:90%" src="image/md/new_img2.jpg"/>
+</a>
+<p>
+Fig 3. transformed image 2.
+</p>
+<a href="image/md/new_img1.jpg">
+<img alt="transformed image 2" style="width:90%" src="image/md/new_img1.jpg"/>
+</a>
+<p>
+Fig 4. resized image 1.
+</p>
+</center>
+<p>We also need to pad image 1 with zeros to make have same size with
+transformed image 2.</p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># resize img1</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>new_img1 <span class="op">=</span> np.hstack([img1, np.zeros_like(img1)])</span></code></pre></div>
+<h3 data-number="4.3.2" id="stack-two-image-together"><span
+class="header-section-number">4.3.2</span> Stack two image together</h3>
+<p>The last step is to stack them together. Direct average gives the
+following result.</p>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>direct_mean <span class="op">=</span> new_img1<span class="op">/</span><span class="dv">2</span> <span class="op">+</span> new_img2<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>imshow(<span class="st">&#39;direct_mean.jpg&#39;</span>, direct_mean)</span></code></pre></div>
+<center>
+<a href="image/md/direct_mean.jpg">
+<img alt="direct mean" style="width:90%" src="image/md/direct_mean.jpg"/>
+</a>
+<p>
+Fig 5. Direct mean.
+</p>
+</center>
+<p>Actually, we need to take average only for the overlapped part. For
+unoverlapped part, we should copy the pixel value from image 1 or image
+2. This could be done by following code:</p>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># smart average</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>cnt <span class="op">=</span> np.zeros([H,W,<span class="dv">1</span>]) <span class="op">+</span> <span class="fl">1e-10</span>     <span class="co"># add a tiny value to avoid ZeroDivisionError</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>cnt <span class="op">+=</span> (new_img2 <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">any</span>(<span class="dv">2</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="co"># any: or</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>cnt <span class="op">+=</span> (new_img1 <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">any</span>(<span class="dv">2</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to floating number to avoid overflow</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>new_img1 <span class="op">=</span> np.float32(new_img1)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>new_img2 <span class="op">=</span> np.float32(new_img2)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>stack <span class="op">=</span> (new_img2<span class="op">+</span>new_img1)<span class="op">/</span>cnt</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>imshow(<span class="st">&#39;stack.jpg&#39;</span>, stack)</span></code></pre></div>
+<p><code>cnt</code> counts how many images have a valid pixel at
+<code>(i,j)</code>:</p>
+<ul>
+<li><code>cnt[i,j]</code> is 2, for overlapped part.</li>
+<li><code>cnt[i,j]</code> is 1, if only one image have a valid pixel at
+<code>(i,j)</code>.</li>
+<li><code>cnt[i,j]</code> is 0, if no image have a valid pixel at
+<code>(i,j)</code>.</li>
+</ul>
+<center>
+<a href="image/md/stack.jpg">
+<img alt="Smart average" style="width:90%" src="image/md/stack.jpg"/>
+</a>
+<p>
+Fig 5. Smart average.
+</p>
+</center>
+<h1 data-number="5" id="panorama-stitching"><span
+class="header-section-number">5</span> Panorama stitching</h1>
+<p>Last section introduces how to stitch two images into one single
+large image. In this section, we will learn how to stitch image frames
+from a video into a real panorama. First, you need to read in all frames
+of <code>image/Vcore.mov</code>. To do this, you can use the function
+<code>read_video_frames</code> provided in
+<code>code/utils.py</code>.</p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> read_video_frames</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>video_name <span class="op">=</span> <span class="st">&#39;image/Vcore.mov&#39;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>images, fps <span class="op">=</span> read_video_frames(video_name)</span></code></pre></div>
+<p>The panorama is usually several times larger than video frames. For
+this video, we let <code>(H, W) = (h*4, w*3)</code>.</p>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>h, w <span class="op">=</span> images[<span class="dv">0</span>].shape[:<span class="dv">2</span>]</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>H, W <span class="op">=</span> h<span class="op">*</span><span class="dv">4</span>, w<span class="op">*</span><span class="dv">3</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>panorama <span class="op">=</span> np.zeros([H,W,<span class="dv">3</span>]) <span class="co"># use a large canvas</span></span></code></pre></div>
+<p>Then we initialize our panorama with the first frame. For this video,
+since V Core is scanned from its bottom right corner, so we place first
+frame at the bottom right corner of the canvas.</p>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># init panorama</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>h_start <span class="op">=</span> H<span class="op">-</span>h<span class="op">-</span>h<span class="op">//</span><span class="dv">2</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>w_start <span class="op">=</span> W<span class="op">-</span>w</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>panorama[h_start:h_start<span class="op">+</span>h, w_start:w_start<span class="op">+</span>w, :] <span class="op">=</span> images[<span class="dv">0</span>]</span></code></pre></div>
+<p>Then we align all frames to this initial panorama one by one as last
+section did. Similarly, we need to maintain a <code>cnt</code> variable
+to record the count for each pixel and a <code>sum</code> variable to
+record the sum. To reduce computation, we may only stitch every forth or
+sixth frames.</p>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>trans_sum <span class="op">=</span> np.zeros([H,W,<span class="dv">3</span>])</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cnt <span class="op">=</span> np.ones([H,W,<span class="dv">1</span>])<span class="op">*</span><span class="fl">1e-10</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img <span class="kw">in</span> tqdm(images[::<span class="dv">4</span>], <span class="st">&#39;processing&#39;</span>):  <span class="co"># tqdm for showing the progress; Lst[ Initial : End : IndexJump ]</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># </span><span class="al">TODO</span><span class="co">: write your own code here as last section</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#       to align img with current panorama</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    aligned_img <span class="op">=</span> ...</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># combine</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    trans_sum <span class="op">+=</span> aligned_img</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    cnt <span class="op">+=</span> (aligned_img <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">any</span>(<span class="dv">2</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    panorama <span class="op">=</span> trans_sum<span class="op">/</span>cnt</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># show</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    imshow(<span class="st">&#39;panorama.jpg&#39;</span>, panorama)</span></code></pre></div>
+<center>
+<img style="width:32%" src="image/md/panorama_init.jpg"/>
+<img style="width:32%" src="image/md/panorama_half.jpg"/>
+<img style="width:32%" src="image/md/panorama.jpg"/>
+<p>
+Fig 6. From left to right: initial panorama; stitching half of frames;
+stitching all frames.
+</p>
+</center>
+<h1 data-number="6" id="video-stabilization-and-stack-denoising"><span
+class="header-section-number">6</span> Video stabilization and stack
+denoising</h1>
+<p>Sometimes, the images we shoot contains lots of random noise,
+especially in dark environment. The most commonly seen noise is white
+noise as shown below.</p>
+<center>
+<table>
+<tr>
+<td>
+<img style="height: 160px;" src="image/md/noisy.jpg"/>
+</td>
+<td style="vertical-align: middle;">
+=
+</td>
+<td>
+<img style="height: 160px;" src="image/md/original.jpg"/>
+</td>
+<td style="vertical-align: middle;">
++
+</td>
+<td>
+<img style="height: 160px;" src="image/md/noise.png"/>
+</td>
+</tr>
+</table>
+<p>
+Fig 7. noisy image = scene + noise
+</p>
+</center>
+<p>Noisy image can be considered as a combination of scene and noise.
+One way to reduce noise is to shoot multiple images or a video for the
+same scene, then ‘stack’ all images or frames together to get a clear
+image. Assume we have <span class="math inline">\(n\)</span>
+images/frames shot for the same scene: <span class="math display">\[
+\begin{matrix}
+\text{img}_1 = \text{scene} + \text{noise}_1 \\
+\text{img}_2 = \text{scene} + \text{noise}_2 \\
+\vdots\\
+\text{img}_n = \text{scene} + \text{noise}_4 \\
+\end{matrix}
+\]</span></p>
+<p>If we average all them together. The scene itself will be reserved
+and noises will cancel each other: <span
+class="math display">\[\begin{align*}
+\frac{1}{N}\sum_i \text{img}_i
+                    &amp;= \text{scene} + \frac{1}{N}\sum_i
+\text{noise}_i \\
+                    &amp;\approx \text{scene}
+\end{align*}\]</span></p>
+<p>This is the basic idea of stack denoising. Idealy if all the scene
+images are aligned, the final image shows good performance. However, in
+reality, the multiple images are usually not shot from exactly the same
+location or direction. The video may not be stable enough. Directly
+stacking them leads to a blur image. So we need to align images,
+stabilise the video before stacking. The whole procedure contains two
+step: 1. align images (algorithm stabilization). 2. average them.</p>
+<p>If you do not want to carry a big heavy tripod with you everywhere,
+algorithm stabilization is a good alternative.</p>
+<center>
+<img style="width:30%" src="image/md/tripod.jpg"/>
+<p>
+Tripod
+</p>
+</center>
+<h2 data-number="6.1" id="long-exposure"><span
+class="header-section-number">6.1</span> Long exposure</h2>
+<p>The first example is long exposure, which is good for capturing dark
+scene. However, sometimes long exposure is not enough either, especially
+in extreme dark environment. In this case, we could shot multiple images
+for the same scene and stack them to get a clearer image.</p>
+<p>The right most image below staks 10 images. Each of them is exposed
+for 3 seconds, so the stacked image is equivalent to 30 seconds
+exposure.</p>
+<center>
+<a href="image/md/night.jpg">
+<img style="width:23%" src="image/md/night.jpg"/></a>
+<a href="image/night/0.jpg">
+<img style="width:23%" src="image/night/0.jpg"/></a>
+<a href="image/md/night_mean.jpg">
+<img style="width:23%" src="image/md/night_mean.jpg"/></a>
+<a href="image/md/night_stabilized_mean.jpg">
+<img style="width:23%" src="image/md/night_stabilized_mean.jpg"/></a>
+<figcaption>
+Fig 6. From left to right: (a) no long exposure. (b) 3s long exposure.
+<br/> (c) stack 10 long-exposure images without stabilization. <br/> (d)
+stack 10 long-exposure images after stabilization.
+</figcaption>
+</center>
+<h2 data-number="6.2" id="deraining"><span
+class="header-section-number">6.2</span> Deraining</h2>
+<p>Stack denoising can also be use to remove rain drops, if we consider
+rain drops as a kind of noise. It can produce a better result than
+median filter. Median filter is a kind of single-image deraining
+technique, with a main drawback that it will blur the image. Stack
+denoising overcomes this drawback. It can produce clear rain-free
+result, but require multiple images as input. Following figures compare
+results of median filter and stack denoising.</p>
+<center>
+<a href="image/md/frame0.jpg">
+<img style="width:45%" src="image/md/frame0.jpg"/></a>
+<a href="image/md/mean.jpg">
+<img style="width:45%" src="image/md/mean.jpg"/></a>
+<figcaption>
+Fig 7. (a) rainy image. (b) average without stabilization.
+</figcaption>
+<a href="image/md/median.jpg">
+<img style="width:45%" src="image/md/median.jpg"/></a>
+<a href="image/md/stabilized_mean.jpg">
+<img style="width:45%" src="image/md/stabilized_mean.jpg"/></a>
+<figcaption>
+Fig 7. (c) median filter. (d) average after stabilization (stack
+denoising).
+</figcaption>
+</center>
+<h1 data-number="7" id="assignment-12-points-2-bonus-points"><span
+class="header-section-number">7</span> Assignment (12 points + 2 bonus
+points)</h1>
+<h2 data-number="7.1" id="image-alignment-via-sift-9-points"><span
+class="header-section-number">7.1</span> Image alignment via SIFT (9
+points)</h2>
+<p>The first task is to perform keypoint detection and matching on
+<code>image/left2.jpg</code> and <code>image/right2.jpg</code>. Please
+complete <code>code/sift.py</code> to finish this task.</p>
+<p>Steps:</p>
+<ol type="1">
+<li><p>Read in two images. Hereafter, we refer them as <code>img1</code>
+and <code>img2</code> respectively.</p></li>
+<li><p>Convert them to grayscale image, and save the converted images as
+<code>results/1.2_img1_gray.jpg</code> and
+<code>results/1.2_img2_gray.jpg</code>. (1 point)</p></li>
+<li><p>Detect keypoints of two images via SIFT, draw keypoints on them
+and save results as <code>results/1.3_img1_keypoints.jpg</code> and
+<code>results/1.3_img2_keypoints.jpg</code>. (2 points)</p></li>
+<li><p>Match keypoints between two images, draw matched keypoints pairs,
+and save as <code>results/1.4_match.jpg</code>. (2 points: 1 for
+matching, 1 for Lowe’s ratio test)</p></li>
+<li><p>Obtain the transform matrix from <code>img2</code> to
+<code>img1</code> by <code>cv2.findHomography</code>. Print the
+transform matrix, copy and save this transform matrix to a file named
+<code>results/1.5_tf_matrix.pdf</code>. (1 point)</p></li>
+<li><p>Apply the transform matrix to <code>img2</code>, and save
+transformed result as <code>results/1.6_transformed.jpg</code>. (1
+point)</p></li>
+<li><p>Stack them into one image, and save as
+<code>results/1.7_stack.jpg</code>. (2 point)</p></li>
+</ol>
+<h2 data-number="7.2" id="panorama-stitching-3-points"><span
+class="header-section-number">7.2</span> Panorama stitching (3
+points)</h2>
+<p>The second task is to stitch all frames from video
+<code>image/winter_day.mov</code> into a panorama. Please complete
+<code>code/panorama.py</code> to finish this task.</p>
+<p>Steps:</p>
+<ol type="1">
+<li>read in all frames of <code>image/winter_day.mov</code>.</li>
+<li>align all frames.</li>
+<li>average them into one panorama, and save as
+<code>results/2_panorama.jpg</code>. (3 points)</li>
+</ol>
+<h2 data-number="7.3"
+id="video-stabilization-and-deraining-2-bonus-points"><span
+class="header-section-number">7.3</span> Video stabilization and
+deraining (2 bonus points)</h2>
+<p>The third task is to stabilize video <code>image/rain2.MOV</code>
+such that we can stack all image together to get a rain-free image.
+Please complete <code>code/derain.py</code> to finish this task.</p>
+<p>Steps:</p>
+<ol type="1">
+<li>read in all frames of <code>image/rain2.MOV</code>, complete the
+function <code>orb_keypoint_match()</code> for finding and matching
+keypoints.</li>
+<li>stabilize the video (align all frames with the first one), and save
+the stabilized video as <code>results/3.2_stabilized.mp4</code>. Tip:
+Function <code>write_frames_to_video</code> in
+<code>code/utils.py</code> can help you save a list of frames to a
+video. (1 point)</li>
+<li>average stabilized frames into one image, and save as
+<code>results/3.3_stabilized_mean.jpg</code>. (1 point)</li>
+</ol>
+<h2 data-number="7.4" id="submission-instruction"><span
+class="header-section-number">7.4</span> Submission instruction</h2>
+<p>Your submission should include</p>
+<ol type="1">
+<li>All intermediate results you are asked to save
+(<code>results/*.jpg</code>, <code>results/*.pdf</code>).</li>
+<li>All source code that could reproduce your results.
+(<code>code/*.py</code>).</li>
+<li>Try to upload the results to BlackBoard, but if it is too large to
+upload, you may give an external link to your intermediate results.
+(Make sure the tutor can download it :))</li>
+</ol>
+<p>Note: <code>cv2.createStitcher</code> and
+<code>cv2.Stitcher_create</code> are not allowed to use in this
+assignment.</p>
+<p>Please submit before <strong>23:59 on April 2 (Sunday)</strong>. You
+may submit as many times as you want, but only your latest submission
+will be graded.</p>
+<h1 class="unnumbered" id="references">References</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_table_of_contents_feature2d/py_table_of_contents_feature2d.html">Feature
+Detection and Description – OpenCV-Python Tutorials beta
+documentation</a><a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Harris, C., &amp; Stephens, M. (1988, August). A
+combined corner and edge detector. In Alvey vision conference (Vol. 15,
+No. 50, pp. 10-5244).<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Lowe, D. G. (2004). Distinctive image features from
+scale-invariant keypoints. International journal of computer vision,
+60(2), 91-110.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Bay, H., Tuytelaars, T., &amp; Van Gool, L. (2006, May).
+Surf: Speeded up robust features. In European conference on computer
+vision (pp. 404-417). Springer, Berlin, Heidelberg.<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Rublee, E., Rabaud, V., Konolige, K., &amp; Bradski, G.
+(2011, November). ORB: An efficient alternative to SIFT or SURF. In 2011
+International conference on computer vision (pp. 2564-2571). IEEE.<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
