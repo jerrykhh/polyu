@@ -5,7 +5,7 @@
 
 # temp
 comp5517/
-comp5241/
+
 
 
 comp5311/assignment/*[.pdf, .zip]
@@ -20,6 +20,11 @@ comp5424/**/*[.pdf, .zip, .docx]
 
 comp5523/assignment/*.pdf
 
+
+comp5241/**/**[.pdf, .zip, .docx, .wav, .mp4]
+!comp5241/**/*.md
+!comp5241/assignment/assig1/archive/cswclui_weather_repo_master.zip
+!comp5241/assignment/assig2/archive/cswclui_reverseproxy_demo_master.zip
 
 comp5322/hw2/Assignment2.docx
 comp5434/assignment/assignment_2/assig**[.docx,.pdf]
