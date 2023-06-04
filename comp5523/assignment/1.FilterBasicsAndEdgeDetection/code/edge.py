@@ -104,36 +104,35 @@ def thresholding(G, t):
     return G_binary
 
 def hysteresis_thresholding(G: np.ndarray, low, high):
-    '''Binarize G according threshold low and high'''
-    # TODO: Please complete this function.
-    # your code here
-    h, w = G.shape
-    STRONG = 255
-    WEAK = 15
-    
+    # Binarize G according threshold t
     G_low = thresholding(G, low)
     G_high = thresholding(G, high)
-    G_hyst = G.copy()
-    
-    sx, sy = np.where(G >= high)
-    wx, wy = np.where((G >= low) & (G < high))
-    lx, ly = np.where((G < low))
-    
-    
-    G_hyst[sx, sy] = STRONG
-    G_hyst[wx, wy] = WEAK
-    G_hyst[lx, ly] = 0
-    
-    for i in range(1, h-1):
-        for j in range(1, w-1):
-            if G_hyst[i,j] == WEAK:
-                if(G_hyst[i-1,j-1] > high) or (G_hyst[i-1,j] > high) or \
-                    (G_hyst[i-1,j+1] > high) or (G_hyst[i,j-1] > high) or \
-                        (G_hyst[i,j+1] > high) or  (G_hyst[i+1,j-1] > high) or \
-                            (G_hyst[i+1,j] > high) or (G_hyst[i+1,j+1] > high):
-                                G_hyst[i,j] = STRONG
-    
-    
+
+    G_hyst = G_high.copy()
+    row_max, col_max = G.shape
+    check_list = []
+
+    for row in range(1, row_max - 1):
+        for col in range(1, col_max - 1):
+            if G_hyst[row][col] == 255:
+                check_list.append((row, col))
+
+ 
+
+    while len(check_list)>0:
+
+        row, col = check_list[0]
+
+        for shift_x in range(-1, 1):
+            for shift_y in range(-1, 1):
+                if shift_x == 0 and shift_y == 0:
+                    continue
+
+                if G[row + shift_x][col + shift_y] <= high and G[row + shift_x][col + shift_y] >= low:
+                    G_hyst[row + shift_x][col + shift_y] = 255
+                    check_list.append((row+shift_x, col+shift_y))
+
+        check_list.pop(0) 
 
     return G_low, G_high, G_hyst
 
