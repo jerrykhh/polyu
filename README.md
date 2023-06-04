@@ -4,7 +4,8 @@ If you want to share your resources or fix bugs, please free to create the pull 
 MSc Information Technology
 | Course Code | Course Name |
 | -- | -- |
-| [COMP5241](./comp5241/) | COMP5241 Software Engineering and Development |
+| [COMP5241](./comp5241/) | Software Engineering and Development |
+| [COMP5311](./comp5311/) | Internet Infrastructure and Protocols |
 | [COMP5322](./comp5322/) | Internet Computing and Application |
 | [COMP5434](./comp5434/)| Big Data Computing |
 | [COMP5511](./comp5511/)| Artificial Intelligence Concepts |
