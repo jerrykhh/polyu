@@ -7,6 +7,7 @@ MSc Information Technology
 | [COMP5241](./comp5241/) | Software Engineering and Development |
 | [COMP5311](./comp5311/) | Internet Infrastructure and Protocols |
 | [COMP5322](./comp5322/) | Internet Computing and Application |
+| [COMP5424](./comp5424/) | Extended Reality |
 | [COMP5434](./comp5434/)| Big Data Computing |
 | [COMP5511](./comp5511/)| Artificial Intelligence Concepts |
 | [COMP5523](./comp5523/)| Computer Vision and Image Processing |

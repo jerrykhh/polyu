@@ -18,6 +18,7 @@ comp5311/project/*
 
 comp5424/**/*[.pdf, .zip, .docx]
 !comp5424/assignment/**/*.md
+!comp5424/exam/*.md
 !comp5424/test/*.md
 
 comp5523/assignment/*.pdf
